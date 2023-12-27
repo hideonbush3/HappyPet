@@ -1,0 +1,101 @@
+.container{
+    background-color: #f4f5f9;
+    padding: 30px 0;
+}
+
+.subContainer{
+    background-color: white;
+    margin: auto;
+    padding: 30px;
+    max-width: 1400px;
+    box-shadow: 0px 3px 8px #9d9d9d;
+    border-radius: 8px;
+    display: flex;
+}
+
+.section1{
+    width: 50%;
+    margin-right: 10px;
+}
+
+.section2{
+    width: 50%;
+    margin-left: 10px;
+}
+
+
+
+.title{
+    border-radius: 5px;
+    display: flex;
+    height: 50px;
+    background-color: #15AE9A;
+    margin-bottom: 20px;
+    font-weight: bold;
+    justify-content: center;
+    align-items: center;
+}
+
+.title h4{
+    color: black;
+}
+
+
+
+
+/* 시설 상세 모달 */
+.modalHeaderBgColor{
+    background-color: #00AC97;
+}
+
+.footer{
+    width: 100%;
+    display: flex;
+}
+
+.starContainer{
+    display: flex;
+    width: 10%;
+    justify-content: start;
+    align-items: center;
+}
+.star{
+    cursor: pointer;
+}
+
+.detailBtnContainer{
+    display: flex;
+    width: 80%;
+    margin-right: 10%;
+}
+
+.detailBtn{
+    background-color: white;
+    border: 2px solid rgb(155, 155, 155);
+    border-radius: 10px;
+    width: 100%;
+    max-height: 100px;
+    color: black;
+    font-weight: 600;
+    font-size: 25px;
+}
+
+.detailBtn:hover{
+    background-color: rgb(155, 155, 155);
+    color: white;
+}
+
+
+
+/* 시설리스트 컨테이너 */
+.facilityListCtn{
+    height: 90%;    
+}
+
+/* 페이지네이션 컨테이너 */
+.paginationCtn {
+    display: flex;
+    justify-content: center;
+    align-items: end;
+    height: 10%;
+}
