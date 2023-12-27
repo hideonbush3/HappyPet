@@ -57,7 +57,8 @@
 
 .btn button{
     display: flex;
-    background-color: #4CAF50;
+    border: none;
+    border-radius: 5px;
     font-size: 14px;
     height: 36px;
     width: 100px;
@@ -72,4 +73,13 @@
 
 .btn button:first-child:hover{
     background-color: #595959;   
+}
+
+.btn button:last-child{
+    background-color: #15AE9A;
+
+}
+
+.btn button:last-child:hover{
+    background-color: #0f7769;
 }

@@ -1,0 +1,49 @@
+.container{
+    padding: 30px;
+}
+
+.headContainer{
+    display: flex;
+    justify-content: end;
+    margin-bottom: 16px;
+}
+
+.headContainer button{
+    border-radius: 5px;
+    border: none;
+    background-color: #15AE9A;
+}
+
+.headContainer button:hover{
+    background-color: #419488;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+    border-bottom: 1px solid ;
+}
+
+th, td {
+    text-align: center;
+    padding: 8px;
+}
+
+th {
+    color: #9d9d9d;
+    font-weight: bold;
+    border-bottom: 1px solid #9d9d9d;
+    border-top: 1px solid #9d9d9d;
+}
+
+.title{
+    width: 50%;
+}
+
+.tdTitle{
+    cursor: pointer;
+    text-align: left;
+}
+.writer .date .views{
+    width: auto;
+}

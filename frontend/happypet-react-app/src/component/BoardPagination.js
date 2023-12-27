@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import style from '../pages/Board/Board.module.css';
+import style from './BoardPagination.module.css';
 
 function BoardPagination (props){
   let data = props.items;

@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import style from '../pages/Board/Board.module.css';
+import style from './BoardList.module.css';
 import { call } from '../service/ApiService';
 export default function BoardList(props){
     const navigate = useNavigate();
@@ -23,7 +23,7 @@ export default function BoardList(props){
     return(
         <>
         
-        <div className={style.tableContainer}>
+        <div className={style.container}>
         <div className={style.headContainer}>
             <button onClick={newPostClick}>글 작성</button>
         </div>

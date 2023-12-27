@@ -95,7 +95,7 @@
     justify-content: center;
     width: 150px ;
     height: 100px;
-    background-color: #4CAF50;
+    background-color: #15AE9A;
     border-radius: 15px;
 }
 
@@ -116,7 +116,7 @@
     margin-left: -10px; /* 역삼각형 가로 크기의 절반 */
     border-width: 10px 10px 0; /* 삼각형 모양 설정 */
     border-style: solid;
-    border-color: #4CAF50 transparent transparent transparent;
+    border-color: #15AE9A transparent transparent transparent;
   }
 
 
@@ -313,7 +313,9 @@
 
 button{
     display: flex;
-    background-color: #4CAF50;
+    background-color: #15AE9A;
+    border: none;
+    border-radius: 5px;
     font-size: 14px;
     height: 36px;
     width: 100px;
@@ -322,5 +324,5 @@ button{
 }
 
 button:hover{
-    background-color: #3a843c;
+    background-color: #0f7769;
 }

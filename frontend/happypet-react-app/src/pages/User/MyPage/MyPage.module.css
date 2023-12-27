@@ -33,7 +33,7 @@
 }
 
 .activeAccordionItem{
-  background-color: #4CAF50;
+  background-color: #15AE9A;
   border: 1px solid #ccc; 
   border-radius: 5px;
   margin-bottom: 5px; 
@@ -94,14 +94,22 @@
 }
 
 .btn button:first-child{
+  border-radius: 5px;
+  border: none;
+  background-color: #15AE9A;
   margin-right: 10px;
 }
 
 .btn button:last-child{
+  border-radius: 5px;
+  border: none;
   background-color: black;
   margin-right: 10px;
 }
 
+.btn button:first-child:hover{
+  background-color: #0f7769;
+}
 .btn button:last-child:hover{
   background-color: #595959;   
 }
@@ -112,7 +120,7 @@
 }
 
 .thead{
-  background-color: #4CAF50;
+  background-color: #15AE9A;
   border-radius: 5px;
   width: 90%;
   text-align: center;
