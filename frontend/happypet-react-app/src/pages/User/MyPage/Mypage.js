@@ -161,7 +161,7 @@ function Mypage(props) {
                                 <p className={style.fname}>시설명</p>
                             </div>
                         </div>
-                            {favoriteList.length > 0
+                            {favoriteList !== undefined && favoriteList.length > 0
                             ?
                             favoriteList.map((f, index) => {
                                 return(
@@ -193,7 +193,7 @@ function Mypage(props) {
                             <p className={style.regdate}>작성일</p>
                         </div>
                     </div>
-                        {postList.length > 0 
+                        {postList !== undefined && postList.length > 0  
                         ?
                          postList.map((p, index) => {
                             return(
