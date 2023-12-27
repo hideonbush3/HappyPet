@@ -1,0 +1,206 @@
+.mainContainer{
+    background-color: #f4f5f9;
+  }
+.subContainer{
+  max-width: 1150px;
+  margin: auto;
+  display: flex;
+}
+
+.accordion {
+  margin-top: 2%;
+  width: 20%;
+  background-color: white;
+  height: 200px;
+  border-radius: 5px;
+  box-shadow: 1px 1px 6px rgb(155, 155, 155);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.accordionItem {
+  vertical-align: middle;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-bottom: 5px;
+  cursor: pointer;
+}
+
+.accordionItem:hover{
+  background-color: #ececec;
+}
+
+.activeAccordionItem{
+  background-color: #4CAF50;
+  border: 1px solid #ccc; 
+  border-radius: 5px;
+  margin-bottom: 5px; 
+  color: white;
+}
+
+.accordionHeader {
+  padding: 10px;
+}
+
+
+
+
+.header{
+  background-color: #f4f4f4;
+  border-radius: 8px;
+}
+
+/* 즐겨찾기 목록 */
+.body{
+  margin: 2% auto 2% auto;
+  background-color: white;
+  width: 75%;
+  border-radius: 5px;
+  box-shadow: 1px 1px 6px rgb(155, 155, 155);
+}
+
+.body h3{
+  padding: 2% 0 2% 5%;
+  color: black;
+}
+
+.myinfo{
+
+}
+
+.myinfo div{
+  display: flex;
+}
+
+.myinfo p{
+  font-size: 18px;
+}
+.myinfo div p:first-child{
+  margin-left: 30px;
+  padding: 5px 5px;
+  width: 20%;
+  color: black;
+}
+.myinfo div p:last-child{
+  color: #868686;
+}
+
+.btn{
+  display: flex;
+  justify-content: end;
+  margin-bottom: 10px;
+}
+
+.btn button:first-child{
+  margin-right: 10px;
+}
+
+.btn button:last-child{
+  background-color: black;
+  margin-right: 10px;
+}
+
+.btn button:last-child:hover{
+  background-color: #595959;   
+}
+
+.table{
+  display: flex;
+  justify-content: center;
+}
+
+.thead{
+  background-color: #4CAF50;
+  border-radius: 5px;
+  width: 90%;
+  text-align: center;
+  box-shadow: 1px 1px 6px rgb(155, 155, 155);
+}
+
+.si, .type, .fname{
+  display: inline-block;
+  color: white;
+  font-weight: 600;
+  height: 100%;
+}
+
+.si, .type{
+  width: 20%;
+}
+
+.fname{
+  width: 60%;
+}
+
+.favoriteTbody{
+  display: flex;
+  align-items: center;
+  height: 50px;
+  border-radius: 5px;
+  width: 90%;
+  box-shadow: 1px 1px 6px rgb(155, 155, 155);
+}
+
+.favoriteTbody p{
+  color: black;
+  text-align: center;
+}
+
+.favoriteTbody p:nth-child(1), 
+.favoriteTbody p:nth-child(2){
+  width: 20%;
+}
+
+.favoriteTbody p:nth-child(3){
+  width: 60%;
+}
+
+.favoriteTbody p:nth-child(3):hover{
+cursor: pointer;
+}
+
+
+
+/* 내가 작성한 글 */
+.title{
+  width: 50%;
+}
+
+.views, .regdate{
+  width: 25%
+}
+
+.title, .views, .regdate{
+  display: inline-block;
+  color: white;
+  font-weight: 600;
+  height: 100%;
+}
+
+.postTbody{
+  display: flex;
+  align-items: center;
+  height: 50px;
+  border-radius: 5px;
+  width: 90%;
+  box-shadow: 1px 1px 6px rgb(155, 155, 155);
+}
+
+.postTbody p{
+  color: black;
+  text-align: center;
+}
+
+.postTbody p:nth-child(1){
+  width: 50%;
+}
+.postTbody p:nth-child(2), 
+.postTbody p:nth-child(3){
+  width: 25%;
+}
+
+.postTbody p:nth-child(1):hover{
+cursor: pointer;
+}

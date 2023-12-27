@@ -1,0 +1,79 @@
+.body{
+    background-color: #f4f5f9; 
+}
+
+.container {
+    max-width: 500px;
+    margin: auto;
+    padding: 20px;
+    border-radius: 5px;
+    background-color: white;
+}
+
+
+.formGroup {
+    margin-bottom: 20px;
+}
+.container p{
+    font-size: 12px;
+    color: rgb(105, 105, 105);
+}
+label {
+    font-size: 14px;
+    display: block;
+    font-weight: bold;
+}
+input[type="text"], input[type="email"], input[type="password"] {
+    font-size: 14px;
+    outline: none;
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    margin-bottom: 15px;
+    border: none;
+    border-bottom: 1px solid black;
+}
+.submit_btn {
+    background-color: #15AE9A;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+.submit_btn:hover {
+    background-color: #0f7769;
+}
+
+.joinLink{
+    color: #0f7769;
+}
+
+
+.inputGroup {
+    margin-bottom: 15px;
+}
+.inputGroup label {
+    display: block;
+    margin-bottom: 5px;
+}
+.inlineInput {
+    display: flex;
+    align-items: center;
+}
+.inlineInput input {
+    flex: 1;
+    padding: 10px;
+    margin-top: 5px;
+    margin-bottom: 15px;
+    border: none;
+    border-bottom: 1px solid black;
+}
+.inlineInput select {
+    font-size: 14px;
+    margin-left: 10px;
+    margin-bottom: 10px;
+    padding: 10px;
+    border: none;
+    border-bottom: 1px solid black;
+}

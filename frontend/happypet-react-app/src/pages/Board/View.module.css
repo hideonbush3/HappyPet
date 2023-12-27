@@ -1,0 +1,326 @@
+.body{
+    background-color: #f4f5f9;
+    padding: 30px 30px;
+}
+
+.container {
+    width: 730px;
+    margin:0 auto;
+    background-color: #f4f5f9;
+}
+
+.post{
+    background-color: #ffffff;
+    box-shadow: 0px 3px 8px #9d9d9d;
+    border-radius: 8px;
+}
+
+.title{
+    display: flex;
+    align-items: center;
+    background-color: #f4f4f4;
+    height: 60px;
+    border-radius: 8px;
+}
+.title p{
+    font-size: 22px;
+    padding: 20px 20px;
+    font-weight: bold;
+    width: 70%;
+    color: black;
+}
+
+.title div{
+    width: 30%;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.title div button:first-child{
+    margin-right: 10px;
+}
+
+.title div button:last-child{
+    margin-right: 10px;
+    background-color: black;
+}
+
+.title div button:last-child:hover{
+    background-color: #595959;
+}
+
+
+
+
+
+/* 작성자 정보 */
+.writerInfo{
+    padding: 0px 20px;
+    height: 50px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.writerInfo div:nth-child(1){
+    font-weight: bold;
+}
+
+.writerInfo div:last-child{
+    color: #989898;
+}
+
+.content{
+    padding: 60px 20px;
+    border-top: 2px solid #dbdbdb;
+    border-bottom: 2px solid #dbdbdb;
+}
+
+.content p{
+    color: black;
+}
+
+
+
+
+.bubbleContainer{
+    margin: 30px 0;
+}
+
+.speechBubble{    
+    position: relative; /* 추가: 부모 요소에 위치 속성 추가 */
+    display: flex;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    width: 150px ;
+    height: 100px;
+    background-color: #4CAF50;
+    border-radius: 15px;
+}
+
+.speechBubble p{
+    color: white;
+}
+
+.speechBubble p:nth-child(1){
+    font-size: 30px;
+    font-weight: bold;
+}
+
+.speechBubble::before {
+    content: '';
+    position: absolute;
+    bottom: -10px; /* 역삼각형을 아래로 내리는 위치 조절 */
+    left: 50%;
+    margin-left: -10px; /* 역삼각형 가로 크기의 절반 */
+    border-width: 10px 10px 0; /* 삼각형 모양 설정 */
+    border-style: solid;
+    border-color: #4CAF50 transparent transparent transparent;
+  }
+
+
+
+
+
+.com{
+    margin: 15px 0;
+    box-shadow: 0px 3px 8px #9d9d9d;
+    border-radius: 8px;
+}
+
+.com div:first-child{
+    display: flex;
+    background-color: #f4f4f4;
+    justify-content: space-between;
+    border-radius: 8px;
+}
+
+.com div:first-child p{
+    display: flex;
+    align-items: center;
+}
+
+.com div:last-child{
+    background-color: white;
+    border-radius: 8px;
+}
+
+.com p{
+    padding: 15px 15px;
+    color: black;
+}
+
+.com div:first-child p:first-child{
+    font-weight: bold;
+    color: black;
+    padding-left: 25px;
+}
+
+.com div:first-child p:last-child{
+    color: #989898;
+}
+
+.com div:last-child p{
+    padding: 20px 40px;
+}
+
+
+
+
+
+.replyContainer{
+    display: flex;
+    justify-content: end;
+    margin-bottom: 30px;
+}
+
+.reply{
+    box-shadow: 0px 3px 8px #9d9d9d;
+    border-radius: 8px;
+    width: 80%;
+}
+
+.reply div:first-child{
+    display: flex;
+    justify-content: space-between;
+    background-color: #f4f4f4;
+    border-radius: 8px;
+}
+
+.reply div:first-child p{
+    display: flex;
+    align-items: center;
+}
+
+.reply div:last-child{
+    background-color: white;
+    border-radius: 8px;
+}
+
+.reply p{
+    padding: 15px 15px;
+    color: black;
+}
+
+.reply div:first-child p:first-child{
+    font-weight: bold;
+    color: black;
+    padding-left: 25px;
+}
+
+.reply div:first-child p:last-child{
+    color: #989898;
+}
+
+.reply div:last-child p{
+    padding: 20px 40px;
+}
+
+.deleteBtn:hover{
+    cursor: pointer;
+}
+
+
+
+
+
+/*대댓 폼*/
+.replyFormContainer{
+    display: flex;
+    justify-content: end;
+}
+
+.replyForm{
+    width: 80%;
+}
+
+.replyForm textarea{
+    height: 100px;
+    width: 100%;
+    padding: 20px;
+    overflow: hidden;
+    resize: none;
+    border: none;
+    box-shadow: 3px 3px 5px rgb(202, 202, 202);
+    border-radius: 8px;
+}
+
+.replyForm textarea:focus{
+    outline: none;
+}
+.replyForm div:last-child{
+    display: flex;
+    justify-content: end;
+    margin-bottom: 10px;
+    margin-top: 10px;
+}
+
+.replyForm div:last-child button:first-child{
+    background-color: black;
+    margin-right: 10px;
+}
+
+.replyForm div:last-child button:first-child:hover{
+    background-color: #595959;   
+}
+
+
+
+
+
+
+
+
+
+
+
+/* 댓글 폼 */
+.commentFormContainer{
+    margin-top: 30px;
+    width: 100%;
+}
+
+.comment{
+    display: flex;
+    justify-content: end;
+}
+
+.comment textarea{
+    width: 100%;
+    height: 130px;
+    padding: 20px;
+    overflow: hidden;
+    resize: none;
+    border: none;
+    box-shadow: 3px 3px 5px rgb(202, 202, 202);
+    border-radius: 8px;
+}
+
+.comment textarea:focus{
+    outline: none;
+}
+
+.commentFormContainer div:last-child{
+    display: flex;
+    justify-content: end;
+}
+
+.commentFormContainer div:last-child button{
+    margin-top: 10px;
+    margin-right: 0;
+}
+
+button{
+    display: flex;
+    background-color: #4CAF50;
+    font-size: 14px;
+    height: 36px;
+    width: 100px;
+    justify-content: center;
+    align-items: center;
+}
+
+button:hover{
+    background-color: #3a843c;
+}
