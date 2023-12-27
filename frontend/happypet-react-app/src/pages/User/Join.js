@@ -23,7 +23,7 @@ function Join(props){
             case 'repassword': setRepassword(e.target.value);   break;
             case 'nickname': setNickname(e.target.value);       break;
             case 'email1': setEmail1(e.target.value);           break;
-            default: setEmail2(e.target.value);
+            default: setEmail2(e.target.value);  break;  
         }
     }
 
@@ -33,16 +33,18 @@ function Join(props){
     const nicknameRegex = /^[a-zA-Z가-힣]{1,20}$/;
     const emailSuffixRegex = /^[a-z]{1,}[.][a-z]{1,}$/;
 
-    const [emailOption, setEmailOption] = useState("직접입력");
-    const [canWrite, setCanWrite] = useState(false);
+    const [emailOption, setEmailOption] = useState('직접입력');
+    const [cantWrite, setCantWrite] = useState(false);
 
     const handleEmailChange = (e) => {
-        if(e.target.value === "직접입력"){
-            setCanWrite(false);
+        e.preventDefault();
+        if(e.target.value === '직접입력'){
+            setCantWrite(false);
             setEmailOption(e.target.value);
         }else {
-            setCanWrite(true);
+            setCantWrite(true);
             setEmailOption(e.target.value);
+            setEmail2(e.target.value);
         }
         
     };
@@ -171,7 +173,7 @@ function Join(props){
                     <div className={style.inlineInput}>
                         <input type="text" id="email1" name="email1" required placeholder="Example" value={email1} onChange={(e) => onChangeHandler(e, 'email1')}/>
                         <span>@</span>
-                        <input type="text" id="email2" name="email2" required readOnly={canWrite} value={email2} onChange={(e) => onChangeHandler(e, 'email2')}/>
+                        <input type="text" id="email2" name="email2" required readOnly={cantWrite} value={email2} onChange={(e) => onChangeHandler(e, 'email2')}/>
                         <select onChange={handleEmailChange} value={emailOption}>
                             <option>직접입력</option>
                             <option>gmail.com</option>
