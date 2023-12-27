@@ -1,0 +1,39 @@
+.headerContainer{
+    background-color: rgb(232, 232, 232);
+}
+.header p{
+    font-size: 24px;
+    color: black;
+}
+
+.tip p{
+    font-size: 22px;
+    color: black;
+}
+.reAuthForm{
+    margin-bottom: 20px;
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.reAuthForm p{
+    width: 20%;
+    color: black;
+    font-size: 20px;
+    margin-right: 20px;
+}
+
+.reAuthForm input{
+    width: 40%;
+    font-size: 20px;
+
+    height: 40px;
+}
+
+.reAuthForm button{
+    display: flex;
+    width: 20%;
+    margin-left: 15px;
+}

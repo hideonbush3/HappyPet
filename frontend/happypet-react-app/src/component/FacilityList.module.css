@@ -1,0 +1,26 @@
+.container{
+    height: 100%;
+}
+.count{
+    color: #00AC97;
+}
+
+table thead th{
+    color: #00AC97;
+
+}
+
+table thead tr {
+    border-bottom: 1px solid #000; 
+  }
+  
+table tbody tr {
+    border-bottom: 3px solid rgb(230, 230, 230);
+}
+table tbody tr td{
+padding: 11px 0;
+}
+
+table tbody tr td:first-child:hover{
+    cursor: pointer;
+}

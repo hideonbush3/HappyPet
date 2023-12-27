@@ -1,0 +1,31 @@
+.paginationContainer{
+    display: flex;    
+}
+.pagination {
+
+    display: inline-block;
+
+}
+
+.pagination a {
+    color: black;
+    float: left;
+    padding: 8px 12px;
+    text-decoration: none;
+    border: none;
+    border-radius: 5px;
+    background-color:  rgb(247, 247, 247);
+    margin: 0 2px;
+    font-size: 14px;
+    transition: background-color 1s ease, color 1s ease;
+}
+
+.pagination a:hover:not(.active) {
+    background-color: #00AC97;
+    color: white;
+}
+
+.pagination a.active {
+    background-color: #00AC97;
+    color: black;
+}
