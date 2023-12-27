@@ -4,6 +4,7 @@ import {call} from '../../../service/ApiService';
 import InfoModal from "../../../component/InfoModal";
 import { useNavigate } from "react-router-dom";
 import ReAuthModal from "../../../component/ReAuthModal";
+import NoData from "../../../component/NoData";
 
 function Mypage(props) {
     const navigate = useNavigate();
@@ -160,7 +161,9 @@ function Mypage(props) {
                                 <p className={style.fname}>시설명</p>
                             </div>
                         </div>
-                            {favoriteList && favoriteList.map((f, index) => {
+                            {favoriteList.length > 0
+                            ?
+                            favoriteList.map((f, index) => {
                                 return(
                                     <div key={index} className={`${style.table} mt-2`}>
                                         <div className={style.favoriteTbody}>
@@ -174,7 +177,10 @@ function Mypage(props) {
                                         </div>
                                     </div>
                                 )
-                            })}
+                            })
+                            :
+                            <NoData message="추가한 시설이 없습니다"/>                         
+                            }
                     </div>
                 )}
                 {activeTab === `${mypageUrl}post` && (
@@ -187,7 +193,9 @@ function Mypage(props) {
                             <p className={style.regdate}>작성일</p>
                         </div>
                     </div>
-                        {postList && postList.map((p, index) => {
+                        {postList.length > 0 
+                        ?
+                         postList.map((p, index) => {
                             return(
                                 <div key={index} className={`${style.table} mt-2`}>
                                     <div className={style.postTbody}>
@@ -201,7 +209,10 @@ function Mypage(props) {
                                     </div>
                                 </div>
                             )
-                        })}
+                        })
+                        :
+                        <NoData message="작성한 게시글이 없습니다"/>
+                        }
                 </div>
                 )}
 

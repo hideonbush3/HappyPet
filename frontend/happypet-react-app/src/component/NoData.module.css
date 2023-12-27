@@ -1,0 +1,12 @@
+.no_data{
+    display: flex;
+    justify-content: center;
+    height: 100px;
+  }
+  
+.no_data p{
+    font-size: 24px;
+    color: #868686;
+    display: flex;
+    align-items: center;
+}
