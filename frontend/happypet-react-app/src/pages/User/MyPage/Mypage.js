@@ -74,7 +74,7 @@ function Mypage(props) {
     }
 
     const postNameClickEH = (id) => {
-        call('/post/view', 'POST', {id: id})
+        call(`/post/view?id=${id}`, 'GET', null)
         .then((res) => {
             navigate('/board/view', {state: {post: res}});
         });
