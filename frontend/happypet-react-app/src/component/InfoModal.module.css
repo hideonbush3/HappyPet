@@ -1,0 +1,41 @@
+.header{
+    background-color: #00AC97;
+}
+
+.footer{
+    width: 100%;
+    display: flex;
+}
+
+.starContainer{
+    display: flex;
+    width: 10%;
+    justify-content: start;
+    align-items: center;
+}
+.star{
+    cursor: pointer;
+}
+
+.detailBtnContainer{
+    display: flex;
+    width: 80%;
+    margin-right: 10%;
+}
+
+.detailBtnContainer button{
+    background-color: white;
+    border: 1px solid rgb(155, 155, 155);
+    border-radius: 10px;
+    width: 100%;
+    max-height: 100px;
+    color: black;
+    font-weight: 600;
+    font-size: 25px;
+    transition: background-color, color 1s ease;
+}
+
+.detailBtnContainer button:hover{
+    background-color: rgb(155, 155, 155);
+    color: white;
+}

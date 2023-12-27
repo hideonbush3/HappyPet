@@ -1,5 +1,5 @@
 import { Col, Container, Modal, Row } from "react-bootstrap";
-import style from '../Main.module.css';
+import style from './InfoModal.module.css';
 import { BsGeoAlt, BsHouse, BsTelephone } from "react-icons/bs";
 import { AiOutlineStar, AiFillStar } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
@@ -38,7 +38,7 @@ function InfoModal(props){
     }
     return(
       <Modal {...props} aria-labelledby="contained-modal-title-vcenter">
-      <Modal.Header closeButton className={`${style.modalHeaderBgColor}`}>
+      <Modal.Header closeButton className={`${style.header}`}>
         <Modal.Title>
           {facility.name}
         </Modal.Title>
@@ -75,7 +75,9 @@ function InfoModal(props){
                   ? <AiFillStar onClick={clickDeleteFavorite} className={style.star} size="40px"color="yellow"/> 
                   : <AiOutlineStar onClick={clickAddFavorite} className={style.star} size="40px"color="yellow"/>}
                   </div>
-                <div className={style.detailBtnContainer}><button className={style.detailBtn} onClick={detailFacilityBtnEventHandler}>상세보기</button></div>
+                <div className={style.detailBtnContainer}>
+                  <button onClick={detailFacilityBtnEventHandler}>상세보기</button>
+                </div>
           </div>
         </Container>
       </Modal.Body>
