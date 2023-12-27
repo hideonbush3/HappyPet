@@ -1,0 +1,8 @@
+{
+    "compilerOptions": {
+      "types": [
+        "kakao.maps.d.ts"
+      ]
+    }
+  }
+  
