@@ -1,17 +1,24 @@
 package hideonbush3.springboot.happypet.service;
 
 import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.io.File;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import hideonbush3.springboot.happypet.dto.PostDTO;
+import hideonbush3.springboot.happypet.model.ImageEntity;
 import hideonbush3.springboot.happypet.model.PostEntity;
 import hideonbush3.springboot.happypet.model.UserEntity;
+import hideonbush3.springboot.happypet.persistence.ImageRepository;
 import hideonbush3.springboot.happypet.persistence.PostRepository;
 import hideonbush3.springboot.happypet.persistence.UserRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -19,10 +26,15 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 public class PostServiceImpl implements PostService{
+    @Value("${image.dir}")
+    private String imageDir;
+
     @Autowired
     private PostRepository postRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private ImageRepository imageRepository;
 
     @Override
     public List<PostDTO> select() {
@@ -32,26 +44,68 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    public PostDTO insert(PostDTO dto, String userId) {
+    public PostDTO insert(String title, String content, List<MultipartFile> images, String userId) {
         try{
             Optional<UserEntity> optionalUserEntity = userRepository.findById(userId);
             UserEntity userEntity = optionalUserEntity.orElseThrow(() -> new RuntimeException("존재하지 않는 유저"));
+            if(images != null) 
+                for(MultipartFile image: images){
+                    if(!image.getContentType().startsWith("image")) throw new RuntimeException("이미지 파일 아님");
+                }
 
+            LocalDateTime regdate = LocalDateTime.now();
+
+            Long order = 1L;
+
+        
             PostEntity postEntity = PostEntity.builder()
-                    .title(dto.getTitle())
-                    .content(dto.getContent())
-                    .regdate(LocalDateTime.now())
+                    .title(title)
+                    .content(content)
+                    .regdate(regdate)
                     .views(0L)
                     .userEntity(userEntity)
                     .commentList(new ArrayList<>())
                     .build();
             
-            PostEntity savedEntity = postRepository.save(postEntity);
-            return PostDTO.convertToDto(savedEntity);
+            PostEntity savedPostEntity = postRepository.save(postEntity);
+            
+            List<ImageEntity> savedImageEntity = new ArrayList<>();
+
+            for(MultipartFile image: images){
+                String uuid = (LocalDate.now() + "" + LocalTime.now())
+                    .replace(".", "")
+                    .replace(":", "")
+                    .replace("-", "");
+                String fnameAndExtention = image.getOriginalFilename();
+                String[] parts = fnameAndExtention.split("\\.");
+                String fname = parts[0];
+                String ext = parts[1];
+                String fnameToSave = fname + " " + uuid + "." + ext;
+
+                image.transferTo(new File(imageDir + fnameToSave));
+
+                Long bytes = image.getSize();
+                double kBytes = Math.ceil((double) bytes / 1024 * 100) / 100;
+                
+                ImageEntity imageEntity = ImageEntity.builder()
+                    .name(fname)
+                    .ext(ext)
+                    .uuid(uuid)
+                    .sequence(order)
+                    .bytes(bytes)
+                    .kBytes(kBytes)
+                    .regdate(regdate)
+                    .postEntity(PostEntity.builder().id(savedPostEntity.getId()).build())
+                    .build();
+
+                    savedImageEntity.add(imageRepository.save(imageEntity));
+                    order ++;
+            }
+            savedPostEntity.setImageList(savedImageEntity);
+            return PostDTO.convertToDto(savedPostEntity);
         }catch(Exception e){
             throw new RuntimeException(e.getMessage());
         }
-        
     }
     
     @Override
