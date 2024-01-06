@@ -159,6 +159,13 @@ export default function View(){
 
                 <div className={style.content}>
                     <p>{post.content}</p>
+                    {post.imageList !== undefined && post.imageList.length !== 0 &&
+                                            post.imageList.map((image, index) => (
+                                                
+                                                <div key={index}>
+                                                    <img src={`http://localhost/images/${image.name}`} alt='Image' />
+                                                </div>
+                                            ))}
                 </div>
             </div>
 
