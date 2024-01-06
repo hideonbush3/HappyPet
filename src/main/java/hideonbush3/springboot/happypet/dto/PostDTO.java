@@ -24,6 +24,7 @@ public class PostDTO {
     private String nickname;
     private String username;
     private List<CommentDTO> commentList;
+    private List<ImageDTO> imageList;
 
     public static PostEntity convertToEntity(PostDTO dto){
         return PostEntity.builder()
@@ -41,8 +42,11 @@ public class PostDTO {
             String username = entity.getUserEntity().getUsername();
 
             List<CommentDTO> commentList = Optional.ofNullable(entity.getCommentList())
-                    .map(list -> list.stream().map(CommentDTO::convertToDto).collect(Collectors.toList()))
-                    .orElse(null);
+                .map(list -> list.stream().map(CommentDTO::convertToDto).collect(Collectors.toList()))
+                .orElse(null);
+            List<ImageDTO> imageList = Optional.ofNullable(entity.getImageList())
+                .map(list -> list.stream().map(ImageDTO::convertToDto).collect(Collectors.toList()))
+                .orElse(null);
 
             return PostDTO.builder()
                 .id(entity.getId())
@@ -53,6 +57,7 @@ public class PostDTO {
                 .nickname(nickname)
                 .username(username)
                 .commentList(commentList)
+                .imageList(imageList)
                 .build();
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
