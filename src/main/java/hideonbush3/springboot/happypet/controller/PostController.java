@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import hideonbush3.springboot.happypet.dto.PostDTO;
 import hideonbush3.springboot.happypet.dto.ResponseDTO;
@@ -39,15 +40,19 @@ public class PostController {
 
     }
 
-    // Configuration of request body -> title, content
+    // Configuration of request body -> FormData{title, content}
     @PostMapping
-    public ResponseEntity<?> create(@RequestBody PostDTO dto, @AuthenticationPrincipal String userId){
-        try {
-            return ResponseEntity.ok().body(postService.insert(dto, userId));
-        } catch (Exception e) {
-            ResponseDTO<Object> res = ResponseDTO.builder().error(e.getMessage()).build();
-            return ResponseEntity.badRequest().body(res);
-        }
+    public ResponseEntity<?> create(@RequestParam("title") String title, 
+                                    @RequestParam("content") String content,
+                                    @RequestParam(value="images", required = false) List<MultipartFile> images, 
+                                    @AuthenticationPrincipal String userId){
+            try {
+                return ResponseEntity.ok().body(postService.insert(title, content, images, userId));
+
+            } catch (Exception e) {
+                ResponseDTO<Object> res = ResponseDTO.builder().error(e.getMessage()).build();
+                return ResponseEntity.badRequest().body(res);
+            }
     }
 
     // Configuration of request body -> title, content
