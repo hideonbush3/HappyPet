@@ -36,6 +36,7 @@ function App() {
 
   useEffect(() => {
     LoadFacilityListService({
+      setAddedToFavorites,
       setFacilityList, 
       setMyMap, 
       setSelectedFacility, 

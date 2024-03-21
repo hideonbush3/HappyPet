@@ -1,3 +1,5 @@
+import { call } from "./ApiService";
+
 export default function LoadFacilityListService(props){
     const key = process.env.REACT_APP_API_KEY;
     fetch("http://localhost:8080/facilityAPI?key=" + key, {
@@ -44,9 +46,20 @@ export default function LoadFacilityListService(props){
             });
   
             window.kakao.maps.event.addListener(marker, 'click', function() {
+              call('/favorite/isexist', 'POST', facility)
+              .then((res) => {
+                  if(res.error === undefined){
+                      console.log(res);
+                      props.setAddedToFavorites(res)
+                  }else{
+                      props.setAddedToFavorites(null);
+                      console.log(res.error);
+                  }
+              });
               props.viewModal(facility);
               map.setCenter(new window.kakao.maps.LatLng(facility.lat, facility.lot));
             });
+          
             markers.push(marker);
           });
           props.setMarkerList(markers);
