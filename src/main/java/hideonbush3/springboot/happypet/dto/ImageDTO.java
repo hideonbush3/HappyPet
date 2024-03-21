@@ -11,19 +11,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ImageDTO {
-    private Long postId;
     private String name;
-    private String ext;
-    private Long sequence;
     private Double kBytes;
 
     public static ImageDTO convertToDto(ImageEntity imageEntity){
         return ImageDTO.builder()
-            .postId(imageEntity.getPostEntity().getId())
-            .name(imageEntity.getName() + " " + imageEntity.getUuid() + "." + imageEntity.getExt())
-            .ext(imageEntity.getExt())
-            .sequence(imageEntity.getSequence())
-            .kBytes(imageEntity.getKBytes())
+            .name(imageEntity.getName())
+            .kBytes(Math.ceil((double) imageEntity.getBytes() / 1024 * 100) / 100)
             .build();
     }
 }

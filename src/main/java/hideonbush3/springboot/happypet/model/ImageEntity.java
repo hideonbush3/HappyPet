@@ -31,11 +31,7 @@ public class ImageEntity {
     @Column(insertable = false, updatable = false)
     private Long id;
     private String name;
-    private String ext;
-    private String uuid;
-    private Long sequence;
     private Long bytes;
-    private Double kBytes;
     private LocalDateTime regdate;
 
     @ManyToOne(fetch = FetchType.LAZY)

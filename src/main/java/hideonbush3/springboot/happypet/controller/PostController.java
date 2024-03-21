@@ -18,9 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 import hideonbush3.springboot.happypet.dto.PostDTO;
 import hideonbush3.springboot.happypet.dto.ResponseDTO;
 import hideonbush3.springboot.happypet.service.PostService;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @RestController
 @RequestMapping("post")
 public class PostController {
@@ -42,13 +40,14 @@ public class PostController {
 
     // Configuration of request body -> FormData{title, content}
     @PostMapping
-    public ResponseEntity<?> create(@RequestParam("title") String title, 
-                                    @RequestParam("content") String content,
-                                    @RequestParam(value="images", required = false) List<MultipartFile> images, 
-                                    @AuthenticationPrincipal String userId){
+    public ResponseEntity<?> create(
+        @RequestParam("title") String title, 
+        @RequestParam("content") String content,
+        @RequestParam(value="images", required = false) List<MultipartFile> images,
+        @RequestParam(value="urlAndName", required = false) String urlAndName,
+        @AuthenticationPrincipal String userId){
             try {
-                return ResponseEntity.ok().body(postService.insert(title, content, images, userId));
-
+                return ResponseEntity.ok().body(postService.insert(title, content, images, urlAndName, userId));
             } catch (Exception e) {
                 ResponseDTO<Object> res = ResponseDTO.builder().error(e.getMessage()).build();
                 return ResponseEntity.badRequest().body(res);
