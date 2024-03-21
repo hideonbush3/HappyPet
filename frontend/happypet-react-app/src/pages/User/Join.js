@@ -104,7 +104,7 @@ function Join(props){
         }
     
         if (!nicknameRegex.test(nickname)) {
-            alert("닉네임은 한글, 영문 대소문자 20자이내");
+            alert("닉네임은 한글, 영문 대소문자 20자이내이며 공백은 허용하지 않습니다.");
             return;
         }
 
