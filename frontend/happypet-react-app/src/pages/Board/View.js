@@ -26,7 +26,8 @@ export default function View(){
     const [selectedCommentId, setSelectedCommentId] = useState(null);
 
     useEffect(() => {
-        console.log(post);
+        const contentContainer = document.getElementById('content-container');
+        contentContainer.innerHTML = post.content;
         call('/user', 'GET', null)
         .then((res) => {
             setSessionUser(res);
@@ -158,14 +159,7 @@ export default function View(){
                 </div>
 
                 <div className={style.content}>
-                    <p>{post.content}</p>
-                    {post.imageList !== undefined && post.imageList.length !== 0 &&
-                                            post.imageList.map((image, index) => (
-                                                
-                                                <div key={index}>
-                                                    <img src={`http://localhost/images/${image.name}`} alt='Image' />
-                                                </div>
-                                            ))}
+                    <div id='content-container'></div>
                 </div>
             </div>
 
