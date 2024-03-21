@@ -8,7 +8,7 @@ group = 'hideonbush3.springboot'
 version = '0.0.1-SNAPSHOT'
 
 java {
-	sourceCompatibility = '11'
+	sourceCompatibility = '8'
 }
 
 configurations {
@@ -26,6 +26,8 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
+	implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.1'
+
 
 
 	compileOnly 'org.projectlombok:lombok'
