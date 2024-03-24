@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import style from './Writing.module.css';
 import { useNavigate } from 'react-router-dom';
 import { API_BASE_URL } from "../../api-config";
@@ -6,8 +6,7 @@ export default function Writing(){
     const navigate = useNavigate();
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
-    const [urlAndName, setUrlAndName] = useState(new Map());
-    const [imageFiles, setImageFiles] = useState([]);
+    const [urlAndFile, setUrlAndFile] = useState(new Map());
   
     const cancelEventHandler = () => {
         window.location.href = '/board';
@@ -22,35 +21,44 @@ export default function Writing(){
         setContent(content.innerHTML);
     };
 
-    // 파일첨부 후 본문작성란에 포커싱
+    // 파일첨부 후 본문작성란에 포커싱 => 포커싱된 곳에 이미지 렌더링
     const focusContentInput = () => {
-        const contentField = document.getElementById('content');
-        contentField.focus({preventScroll: true});
+        document.getElementById('content').focus({preventScroll: true});
     }
-  
+    
+    useEffect(() => {
+        detachImage();
+    }, [content])
+
+    const detachImage = () => {
+        const images = document.getElementById('content').querySelectorAll('img');
+        if(images.length === 0) return;
+        const newMap = new Map();
+        images.forEach((image) => {
+            if(urlAndFile.has(image.src)){
+                newMap.set(image.src, urlAndFile.get(image.src));
+            }
+        });
+
+        setUrlAndFile(newMap);
+    }
+
     const handleImageUpload = (e) => {
         const files = e.target.files;
-        const originalMap = new Map(urlAndName);
-        const originalImages = imageFiles;
+        const originalUrlAndFile = new Map(urlAndFile);
 
         if(!!files){
             for(const file of files){
-                const reader = new FileReader();
-                reader.addEventListener('load', (e) => {
-                    focusContentInput();
+                focusContentInput();
 
-                    const img = document.createElement('img');
-                    img.src = reader.result;
-                    document.execCommand('insertHTML', false, `<br>${img.outerHTML}<br>`);
+                const img = document.createElement('img');
+                img.src = URL.createObjectURL(file);
+                document.execCommand('insertHTML', false, `<br>${img.outerHTML}<br>`);
 
-                    originalMap.set(img.src, file.name);
-                    originalImages.push(file);
-                });
-                reader.readAsDataURL(file);
+                originalUrlAndFile.set(img.src, file);
             }
         }
-        setUrlAndName(originalMap);
-        setImageFiles(originalImages);
+        setUrlAndFile(originalUrlAndFile);
         e.target.value = null;
     }
 
@@ -67,11 +75,17 @@ export default function Writing(){
         formData.append('title', title);
         formData.append('content', content);
 
-        if(urlAndName.size !== 0){
-            imageFiles.forEach((file) => {
+        if(urlAndFile.size > 0){
+            const files = Array.from(urlAndFile.values());
+            files.forEach((file) => {
                 formData.append('images', file);
             });
             // Map => Json문자열 형변환
+            const urlAndName = new Map();
+            urlAndFile.forEach((value, key) => {
+                urlAndName.set(key, value.name);
+            })
+
             const result = JSON.stringify(Object.fromEntries(urlAndName));
             formData.append('urlAndName', result);
         }
