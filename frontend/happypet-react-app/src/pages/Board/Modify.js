@@ -30,7 +30,6 @@ export default function Modify(){
         setContent(content.innerHTML);
     };
   
-    // 파일첨부 후 본문작성란에 포커싱 => 포커싱된 곳에 이미지 렌더링
     const focusContentInput = () => {
         document.getElementById('content').focus({preventScroll: true});
     }
@@ -72,6 +71,52 @@ export default function Modify(){
             return;
         }
 
+        const formData = new FormData();
+        formData.append('title', title);
+        formData.append('content', content);
+        
+        // 본문 입력창에 이미지가 하나 이상 존재하고, 원본 게시글이 이미지를 하나 이상 갖고있을 경우
+        // 원본의 이미지들과 본문 이미지들을 비교해서 원본엔 있지만 본문에 없을 경우(작성자가 원본을 삭제)
+        // 서버에 삭제됐음을 알리기위해 imagesToDelete 배열에 해당 이미지들의 이미지명을 담는다.
+        let imagesToDelete = [];
+        const originImages = post.imageList;
+        let originImagesNames = [];
+
+        if(originImages.length > 0){
+            originImages.forEach(image => {
+                originImagesNames.push(image.name);
+            })
+        }
+        
+        if(images.length > 0 && originImagesNames.length > 0){
+            let allImagesNames = [];
+            images.forEach((image) => {
+                const url = new URL(image.src);
+                const originName = decodeURIComponent(url.pathname.split('/').pop());
+                allImagesNames.push(originName);
+            })
+            imagesToDelete = originImagesNames.filter(
+                (imageName) => !allImagesNames.includes(imageName));
+        }else if(images.length === 0 && originImagesNames.length > 0){
+            imagesToDelete = originImagesNames;
+        }
+        formData.append('imagesToDelete', imagesToDelete);
+
+        if(urlAndFile.size > 0){
+            const files = Array.from(urlAndFile.values());
+            files.forEach((file) => {
+                formData.append('images', file);
+            });
+
+            const urlAndName = new Map();
+            urlAndFile.forEach((value, key) => {
+                urlAndName.set(key, value.name);
+            })
+
+            const result = JSON.stringify(Object.fromEntries(urlAndName));
+            formData.append('urlAndName', result);
+        }
+           
       call('/post/modify', 'PUT', {id: post.id, title: title, content: content})
       .then((res) => {
         if(res === undefined || res === null){
