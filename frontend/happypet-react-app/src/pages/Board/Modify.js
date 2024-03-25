@@ -6,6 +6,7 @@ export default function Modify(){
     const location = useLocation();
     const post = location.state.post;
     const navigate = useNavigate();
+    const [urlAndFile, setUrlAndFile] = useState(new Map());
 
     const [title, setTitle] = useState(post.title);
     const [content, setContent] = useState(post.content);
@@ -29,6 +30,29 @@ export default function Modify(){
         setContent(content.innerHTML);
     };
   
+    // 파일첨부 후 본문작성란에 포커싱 => 포커싱된 곳에 이미지 렌더링
+    const focusContentInput = () => {
+        document.getElementById('content').focus({preventScroll: true});
+    }
+    const handleImageUpload = (e) => {
+        const files = e.target.files;
+        const originalUrlAndFile = new Map(urlAndFile);
+
+        if(!!files){
+            for(const file of files){
+                focusContentInput();
+
+                const img = document.createElement('img');
+                img.src = URL.createObjectURL(file);
+                document.execCommand('insertHTML', false, `<br>${img.outerHTML}<br>`);
+
+                originalUrlAndFile.set(img.src, file);
+            }
+        }
+        setUrlAndFile(originalUrlAndFile);
+        e.target.value = null;
+    }
+
     const handleSubmit = (e) => {
         e.preventDefault();
         if(post.title === title && post.content === content){
@@ -43,11 +67,11 @@ export default function Modify(){
         const text = input.textContent.trim();
         const images = input.querySelectorAll('img');
 
-        if(text === '' && images.length === 0){
+        if(text === '' && images.length ===0){
             alert('내용을 입력하세요');
             return;
         }
-        
+
       call('/post/modify', 'PUT', {id: post.id, title: title, content: content})
       .then((res) => {
         if(res === undefined || res === null){
@@ -80,7 +104,7 @@ export default function Modify(){
                     <button onClick={cancelEventHandler}>취소</button>
                     <button onClick={handleSubmit}>수정 완료</button>               
             </div>
-
+            <input multiple="multiple" type='file' id='imageInput' accept='image/*' onChange={handleImageUpload}/>
         </div>
         </div>
     )
