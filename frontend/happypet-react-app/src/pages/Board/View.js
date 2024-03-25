@@ -174,10 +174,10 @@ export default function View(){
             
             <div>
                 {commentList.length !== 0 ?(
-                    commentList.map((comment, index) => {
+                    commentList.map((comment) => {
                         return(
-                            <>
-                            <div key={index}>
+                            <div key={comment.id}>
+                            <div>
                                 <div className={style.com} onClick={() => replyFormHandler(comment.id)}>
                                     <div>
                                         <p><AiOutlineUser/> &nbsp;{comment.nickname}</p>
@@ -209,10 +209,10 @@ export default function View(){
                             </div>
                             )}
                             {comment.replyList.length !== 0 ? (
-                                comment.replyList.map((reply, index) => {
+                                comment.replyList.map((reply) => {
                                     return(
-                                        <div className={style.replyContainer}>
-                                        <div className={style.reply} key={reply.id}>
+                                    <div key={reply.id} className={style.replyContainer}>
+                                        <div className={style.reply}>
                                             <div>
                                                 <p><AiOutlineUser/> &nbsp;{reply.nickname}</p>
                                                 <p><AiOutlineClockCircle/> &nbsp;{reply.regdate}
@@ -232,7 +232,7 @@ export default function View(){
                                     )
                                 })
                             ) : null}
-                            </>
+                            </div>
                         );
                     })
                 ) : <p>첫번째 댓글을 달아보세요</p>}
