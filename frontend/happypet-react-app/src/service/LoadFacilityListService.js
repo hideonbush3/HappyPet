@@ -49,12 +49,10 @@ export default function LoadFacilityListService(props){
             window.kakao.maps.event.addListener(marker, 'click', function() {
               call('/favorite/isexist', 'POST', facility)
               .then((res) => {
-                  if(res.error === undefined){
-                      console.log(res);
-                      setAddedToFavorites(res)
+                  if(res.object !== null){
+                      setAddedToFavorites(res.object)
                   }else{
                       setAddedToFavorites(null);
-                      console.log(res.error);
                   }
               });
               props.viewModal(facility);

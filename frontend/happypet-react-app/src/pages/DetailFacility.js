@@ -24,7 +24,6 @@ function DetailFacility(){
     const clickDeleteFavorite = () => {
         call('/favorite/removeinmodal', 'DELETE', addedToFavorites)
         .catch(error => {
-          console.log(`설계상 에러\n메세지 => `, error);
           setAddedToFavorites(null);
           setProcess("즐겨찾기 삭제")
           callToastMessage();
@@ -47,11 +46,10 @@ function DetailFacility(){
     useEffect(() => {
         call('/favorite/isexist', 'POST', f)
         .then((res) => {
-            if(res.error === undefined){
-                setAddedToFavorites(res)
+            if(res.object !== null){
+                setAddedToFavorites(res.object)
             }else{
                 setAddedToFavorites(null);
-                console.log(`즐겨찾기에 추가되지 않은 시설\n메세지 => `, res.error);
             }
         });
     }, [f])

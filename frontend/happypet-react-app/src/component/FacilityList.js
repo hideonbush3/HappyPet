@@ -16,7 +16,7 @@ export default function FacilityList(props){
         call('/favorite/isexist', 'POST', facility)
         .then((res) => {
             if(res.object !== null){
-                setAddedToFavorites(res)
+                setAddedToFavorites(res.object);
             }else{
                 setAddedToFavorites(null);
             }

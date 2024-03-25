@@ -59,12 +59,10 @@ function Mypage(props) {
     const facilityNameClickEH = (facility) => {
         call('/favorite/isexist', 'POST', facility)
         .then((res) => {
-            if(res.error === undefined){
-                console.log(res);
-                setAddedToFavorites(res)
+            if(res.object !== null){
+                setAddedToFavorites(res.object)
 
             }else{
-                console.log(res.error);
                 setAddedToFavorites(null);
                 setSelectedFacility(facility);
                 setShowModal(true);
@@ -100,7 +98,6 @@ function Mypage(props) {
                 if(result){
                     call('/user/remove', 'DELETE', null)
                     .then((res) => {
-                        console.log(res);
                         if(res.message === '탈퇴완료'){
                             alert("회원탈퇴가 완료됐습니다.");
                             setShowReAuthModal(false);
@@ -218,16 +215,16 @@ function Mypage(props) {
 
             </div>
             <InfoModal 
-            facility={selectedFacility} 
-            addedToFavorites={addedToFavorites} 
-            setAddedToFavorites={setAddedToFavorites}
-            show={showModal} onHide={() => setShowModal(false)} />
+                facility={selectedFacility} 
+                addedToFavorites={addedToFavorites} 
+                setAddedToFavorites={setAddedToFavorites}
+                show={showModal} onHide={() => setShowModal(false)} />
             
             <ReAuthModal
-            message={message}
-            show={showReAuthModal} 
-            onHide={() => setShowReAuthModal(false)} 
-            reAuth={reAuth}/>
+                message={message}
+                show={showReAuthModal} 
+                onHide={() => setShowReAuthModal(false)} 
+                reAuth={reAuth}/>
         </div>
     )
 }
