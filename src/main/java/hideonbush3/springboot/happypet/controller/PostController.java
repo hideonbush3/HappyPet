@@ -41,13 +41,13 @@ public class PostController {
     // Configuration of request body -> FormData{title, content}
     @PostMapping
     public ResponseEntity<?> create(
+        @AuthenticationPrincipal String userId,
         @RequestParam("title") String title, 
         @RequestParam("content") String content,
         @RequestParam(value="images", required = false) List<MultipartFile> images,
-        @RequestParam(value="urlAndName", required = false) String urlAndName,
-        @AuthenticationPrincipal String userId){
+        @RequestParam(value="urlAndName", required = false) String urlAndName){
             try {
-                return ResponseEntity.ok().body(postService.insert(title, content, images, urlAndName, userId));
+                return ResponseEntity.ok().body(postService.insert(userId, title, content, images, urlAndName));
             } catch (Exception e) {
                 ResponseDTO<Object> res = ResponseDTO.builder().error(e.getMessage()).build();
                 return ResponseEntity.badRequest().body(res);
@@ -56,9 +56,16 @@ public class PostController {
 
     // Configuration of request body -> title, content
     @PutMapping("/modify")
-    public ResponseEntity<?> modify(@RequestBody PostDTO dto, @AuthenticationPrincipal String userId){
+    public ResponseEntity<?> modify(
+        @AuthenticationPrincipal String userId,
+        @RequestParam("postId") Long id,
+        @RequestParam("title") String title,
+        @RequestParam("content") String content,
+        @RequestParam(value="images", required = false) List<MultipartFile> images,
+        @RequestParam(value="urlAndName", required = false) String urlAndName,
+        @RequestParam(value="imagesToDelete", required = false) String[] imagesToDelete){
         try {
-            return ResponseEntity.ok().body(postService.update(dto, userId));
+            return ResponseEntity.ok().body(postService.update(userId, id, title, content, images, urlAndName, imagesToDelete));
         } catch (Exception e) {
             ResponseDTO<Object> res = ResponseDTO.builder().error(e.getMessage()).build();
             return ResponseEntity.badRequest().body(res);
