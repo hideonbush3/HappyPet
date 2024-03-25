@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import style from './Writing.module.css';
 import { call } from '../../service/ApiService';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { API_BASE_URL } from '../../api-config';
 export default function Modify(){
     const location = useLocation();
     const post = location.state.post;
@@ -116,15 +117,39 @@ export default function Modify(){
             const result = JSON.stringify(Object.fromEntries(urlAndName));
             formData.append('urlAndName', result);
         }
-           
-      call('/post/modify', 'PUT', {id: post.id, title: title, content: content})
-      .then((res) => {
-        if(res === undefined || res === null){
-            alert("게시글 수정실패");
-        }else{
-            navigate("/board/view", {state: {post: res}});
-        }
-      })
+         
+        const options = {
+            url: API_BASE_URL + '/post/modify',
+            method: 'PUT',
+            body: formData,
+            headers: {
+                "Authorization": "Bearer " + localStorage.getItem('token'),
+            }
+        };
+
+        return fetch(options.url, options).then((res) => {
+            if(res.status === 200) {
+                return res.json();
+            }else if(res.status === 403){
+                window.location.href = "/user/login";
+            }else{
+                return res.json();
+            }
+        })
+        .then((res) => {
+            if(res.error === undefined){
+                navigate('/board/view', {state: {post: res}});
+            }else if(res.error === '존재하지 않는 유저'){
+                alert('세션이 만료됐습니다.\n재로그인하세요.');
+                localStorage.setItem('token', null);
+                window.location.href = '/user/login';
+            }else{
+                alert('페이지를 새로고침한 후 재작성하세요.\n그래도 작성이 안된다면 관리자에게 문의하세요.')
+            }
+          })
+        .catch(error => {
+            throw error;
+        })
     };
   
     return(
