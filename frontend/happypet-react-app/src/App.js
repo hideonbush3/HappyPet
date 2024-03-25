@@ -135,7 +135,7 @@ function App() {
   }
 
   return (
-    <div fluid className={`${style.container} `} >
+    <div fluid='true' className={`${style.container} `} >
 
         <div className={`${style.subContainer}`} >
 
