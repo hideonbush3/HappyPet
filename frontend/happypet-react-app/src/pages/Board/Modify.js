@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import style from './Writing.module.css';
-import { call } from '../../service/ApiService';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { API_BASE_URL } from '../../api-config';
 export default function Modify(){
@@ -73,6 +72,7 @@ export default function Modify(){
         }
 
         const formData = new FormData();
+        formData.append('postId', post.id);
         formData.append('title', title);
         formData.append('content', content);
         
