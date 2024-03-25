@@ -29,7 +29,6 @@ export default function Writing(){
     useEffect(() => {
         detachImage();
     }, [content])
-
     const detachImage = () => {
         const images = document.getElementById('content').querySelectorAll('img');
         if(images.length === 0) return;
@@ -67,10 +66,15 @@ export default function Writing(){
             alert('제목을 입력하세요');
             return;
         }
-        if(content.trim() === ''){
+
+        const input = document.getElementById('content');
+        const text = input.textContent.trim();
+        const imgs = input.querySelectorAll('img');
+        if(text === '' && imgs.length === 0){
             alert('내용을 입력하세요');
             return;
         }
+
         const formData = new FormData();
         formData.append('title', title);
         formData.append('content', content);
@@ -89,7 +93,6 @@ export default function Writing(){
             const result = JSON.stringify(Object.fromEntries(urlAndName));
             formData.append('urlAndName', result);
         }
-
 
         const options = {
             url: API_BASE_URL + '/post',
