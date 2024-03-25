@@ -24,7 +24,10 @@ function Header(){
                                     <Nav.Link href="/" onClick={signOutEvent}>로그아웃</Nav.Link>
                                     </>
                                 ) :
+                                    <>
+                                    <Nav.Link href="/board">게시판</Nav.Link>
                                     <Nav.Link href="/user/login">로그인</Nav.Link>
+                                    </>
                                 }
                             </Nav>
                             </Navbar.Collapse>
