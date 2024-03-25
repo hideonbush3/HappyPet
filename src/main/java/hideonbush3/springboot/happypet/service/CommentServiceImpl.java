@@ -15,9 +15,7 @@ import hideonbush3.springboot.happypet.model.UserEntity;
 import hideonbush3.springboot.happypet.persistence.PostRepository;
 import hideonbush3.springboot.happypet.persistence.CommentRepository;
 import hideonbush3.springboot.happypet.persistence.UserRepository;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @Service
 public class CommentServiceImpl implements CommentService{
     @Autowired

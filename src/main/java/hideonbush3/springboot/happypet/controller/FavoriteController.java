@@ -15,9 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import hideonbush3.springboot.happypet.dto.FavoriteDTO;
 import hideonbush3.springboot.happypet.dto.ResponseDTO;
 import hideonbush3.springboot.happypet.service.FavoriteService;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @RestController
 @RequestMapping("favorite")
 public class FavoriteController {
@@ -73,7 +71,6 @@ public class FavoriteController {
     @DeleteMapping("/removeinmodal")
     public void removeInModal(@AuthenticationPrincipal String userId, @RequestBody FavoriteDTO dto){
         try {
-            log.info("삭제할 즐겨찾기 => {}", dto);
             favoriteService.deleteInModal(dto, userId);
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());

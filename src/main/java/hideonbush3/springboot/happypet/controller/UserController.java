@@ -22,9 +22,7 @@ import hideonbush3.springboot.happypet.dto.UserDTO;
 import hideonbush3.springboot.happypet.model.UserEntity;
 import hideonbush3.springboot.happypet.security.TokenProvider;
 import hideonbush3.springboot.happypet.service.UserService;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @RestController
 @RequestMapping("user")
 public class UserController {

@@ -8,11 +8,9 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.web.filter.CorsFilter;
 
 import hideonbush3.springboot.happypet.security.JwtAuthenticationFilter;
-import lombok.extern.slf4j.Slf4j;
 
 // 스프링 시큐리티에서 내가 생성한 서블릿 필터(JwtAuthenti...)를 사용하라고 알리는 설정 작업
 @EnableWebSecurity
-@Slf4j
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 
     @Autowired

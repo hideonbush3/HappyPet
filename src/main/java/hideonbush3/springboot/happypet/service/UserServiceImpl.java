@@ -13,9 +13,7 @@ import hideonbush3.springboot.happypet.persistence.CommentRepository;
 import hideonbush3.springboot.happypet.persistence.ReplyRepository;
 import hideonbush3.springboot.happypet.persistence.UserRepository;
 import hideonbush3.springboot.happypet.security.TokenProvider;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @Service("ussrv")
 public class UserServiceImpl implements UserService{
 
@@ -38,12 +36,10 @@ public class UserServiceImpl implements UserService{
         }
         final String username = userEntity.getUsername();
         if(userRepository.existsByUsername(username)){
-            log.warn("이미 등록된 아이디 => {}", username);
             throw new RuntimeException("아이디 중복");
         }
         
         if(userRepository.existsByNickname(userEntity.getNickname())){
-            log.warn("이미 등록된 닉네임 => {}", userEntity.getNickname());
             throw new RuntimeException("닉네임 중복");
         }
 
