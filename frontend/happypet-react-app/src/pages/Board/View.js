@@ -55,7 +55,6 @@ export default function View(){
     }
     
     const commentRemoveHandler = (comment) => {
-        console.log(comment);
         if(window.confirm("삭제하시겠습니까?")){
             call(`/comment/remove`, 'DELETE', comment)
             .then((res) => {
@@ -110,8 +109,6 @@ export default function View(){
     }
 
     const replyRemoveHandler = (key, reply) => {
-        console.log(key);
-        console.log(reply);
         if(window.confirm("삭제하시겠습니까?")){
             call('/reply/remove', 'DELETE', {id: reply.id, commentId: key})
             .then((res) => {

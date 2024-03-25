@@ -23,7 +23,6 @@ export default function Post(props){
         content === "" ? alert("내용을 입력하세요") : 
         call('/comment/write', 'POST', {content: content, postId: props.post.id})
         .then((res) => {
-            console.log(res.data);
             props.setCommentList(res.data);
             setContent("");
             post.commentList = res.data;

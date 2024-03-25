@@ -46,7 +46,6 @@ function InfoModal(props){
     const clickDeleteFavorite = () => {
       call('/favorite/removeinmodal', 'DELETE', addedToFavorites)
       .catch(error => {
-        console.log(`설계상 에러\n메세지 => `, error);
         setAddedToFavorites(null);
         setProcess("즐겨찾기 삭제")
         callToastMessage();

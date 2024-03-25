@@ -19,7 +19,6 @@ export function call(api, method, request){
         options.body = JSON.stringify(request);
     }
     return fetch(options.url, options).then((res) => {
-        console.log(res);
         if(res.status === 200) {
             return res.json();
         }else if(res.status === 403){
@@ -37,7 +36,6 @@ export function call(api, method, request){
 export function signin(userDTO){
     return call("/user/signin", "POST", userDTO)
         .then((res) => {
-            console.log(res);
             if(res.object !== null){
                 localStorage.setItem("token", res.object.token);
                 window.location.href = "/"

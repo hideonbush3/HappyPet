@@ -11,7 +11,6 @@ function Board(){
     useEffect(() => {
         call('/post', 'GET', null)
           .then((res) => {
-            console.log(res);
             setItems(res.data);
           });
       }, []);
