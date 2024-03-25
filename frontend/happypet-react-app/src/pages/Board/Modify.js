@@ -1,18 +1,21 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import style from './Writing.module.css';
 import { call } from '../../service/ApiService';
 import { useLocation, useNavigate } from 'react-router-dom';
 export default function Modify(){
     const location = useLocation();
+    const post = location.state.post;
     const navigate = useNavigate();
 
-    const post = location.state.post;
-
-    const [originTitle, setOriginTitle] = useState(post.title);
-    const [originContent, setOriginContent] = useState(post.content)
     const [title, setTitle] = useState(post.title);
     const [content, setContent] = useState(post.content);
   
+    // 첫 렌더링시 원래내용 표시
+    useEffect(() => {
+        const contentContainer = document.getElementById('content');
+        contentContainer.innerHTML = post.content;
+    }, [])  
+
     const cancelEventHandler = () => {
         navigate('/board/view', {state: {post: post}});
     }
@@ -22,12 +25,13 @@ export default function Modify(){
     };
   
     const handleContentChange = (e) => {
-      setContent(e.target.value);
+        const content = document.getElementById('content');
+        setContent(content.innerHTML);
     };
   
     const handleSubmit = (e) => {
         e.preventDefault();
-        if(originTitle === title && originContent === content){
+        if(post.title === title && post.content === content){
             alert("변경된 내용이 없습니다");
             return;
         }
@@ -53,11 +57,10 @@ export default function Modify(){
                         value={title}
                         onChange={handleTitleChange}/>
                 </div>
-                <div className={style.content}>
-                    <textarea 
-                        placeholder='내용을 입력하세요'
-                        value={content}
-                        onChange={handleContentChange}/>
+                <div id='content'
+                    contentEditable='true'
+                    className={style.content}
+                    onInput={handleContentChange}>
                 </div>
             </div>
             <div className={style.btn}>
