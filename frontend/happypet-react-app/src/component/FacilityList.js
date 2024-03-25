@@ -7,6 +7,7 @@ export default function FacilityList(props){
     const {currentPage} = props;
     const {facilities} = props;
     const {filteredFacilityList} = props;
+    const {setAddedToFavorites} = props;
 
     let lastItemIndex = currentPage * 10 - 1;
     let firstItemIndex = lastItemIndex - 9
@@ -14,12 +15,10 @@ export default function FacilityList(props){
     function facilityNameClickEH (facility){
         call('/favorite/isexist', 'POST', facility)
         .then((res) => {
-            if(res.error === undefined){
-                console.log(res);
-                props.setAddedToFavorites(res)
+            if(res.object !== null){
+                setAddedToFavorites(res)
             }else{
-                props.setAddedToFavorites(null);
-                console.log(res.error);
+                setAddedToFavorites(null);
             }
         });
         props.setSelectedFacility(facility);

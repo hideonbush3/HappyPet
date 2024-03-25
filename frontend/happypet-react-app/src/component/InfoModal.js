@@ -13,6 +13,7 @@ function InfoModal(props){
     const navigate = useNavigate();
     const [showToastMessage, setShowToastMessage] = useState(false);
     const [process, setProcess] = useState("");
+    const {setAddedToFavorites} = props;
 
     if (!facility || !facility.name) {
       return null;
@@ -33,7 +34,7 @@ function InfoModal(props){
       call('/favorite', 'POST', facility)
       .then((res) => {
         if(res.error === undefined){
-          props.setAddedToFavorites(res);
+          setAddedToFavorites(res);
           setProcess("즐겨찾기 추가")
           callToastMessage();
         }else{
@@ -46,7 +47,7 @@ function InfoModal(props){
       call('/favorite/removeinmodal', 'DELETE', addedToFavorites)
       .catch(error => {
         console.log(`설계상 에러\n메세지 => `, error);
-        props.setAddedToFavorites(null);
+        setAddedToFavorites(null);
         setProcess("즐겨찾기 삭제")
         callToastMessage();
       })

@@ -2,6 +2,7 @@ import { call } from "./ApiService";
 
 export default function LoadFacilityListService(props){
     const key = process.env.REACT_APP_API_KEY;
+    const {setAddedToFavorites} = props;
     fetch("http://localhost:8080/facilityAPI?key=" + key, {
         method: "GET",
         headers: {
@@ -50,9 +51,9 @@ export default function LoadFacilityListService(props){
               .then((res) => {
                   if(res.error === undefined){
                       console.log(res);
-                      props.setAddedToFavorites(res)
+                      setAddedToFavorites(res)
                   }else{
-                      props.setAddedToFavorites(null);
+                      setAddedToFavorites(null);
                       console.log(res.error);
                   }
               });
