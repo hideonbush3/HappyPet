@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import hideonbush3.springboot.happypet.dto.FavoriteDTO;
+import hideonbush3.springboot.happypet.dto.ResponseDTO;
 import hideonbush3.springboot.happypet.model.FavoriteEntity;
 import hideonbush3.springboot.happypet.model.UserEntity;
 import hideonbush3.springboot.happypet.persistence.FavoriteRepository;
@@ -18,11 +19,17 @@ public class FavoriteServiceImpl implements FavoriteService{
     private FavoriteRepository favoriteRepository;
     
     @Override
-    public FavoriteDTO selectOne(FavoriteDTO dto, String userId){
+    public ResponseDTO<FavoriteDTO> selectOne(FavoriteDTO dto, String userId){
         try{
             final UserEntity userEntity = UserEntity.builder().id(userId).build();
-            FavoriteEntity favoriteEntity = favoriteRepository.findByUserEntityAndNameAndAddr(userEntity, dto.getName(), dto.getAddr()).get();
-            return FavoriteDTO.toFavoriteDTO(favoriteEntity);
+            Optional<FavoriteEntity> optionalEntity = favoriteRepository.findByUserEntityAndNameAndAddr(userEntity, dto.getName(), dto.getAddr());
+            
+            ResponseDTO<FavoriteDTO> responseDTO = new ResponseDTO<>();
+            if(optionalEntity.isPresent()){
+                FavoriteDTO favoriteDTO = FavoriteDTO.toFavoriteDTO(optionalEntity.get());
+                responseDTO.setObject(favoriteDTO);
+            }
+            return responseDTO;
         }catch(Exception e){
             throw new RuntimeException(e.getMessage());
         }

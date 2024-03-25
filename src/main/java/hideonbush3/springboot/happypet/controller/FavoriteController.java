@@ -27,10 +27,10 @@ public class FavoriteController {
     @PostMapping("/isexist")
     public ResponseEntity<?> isExist(@RequestBody FavoriteDTO dto, @AuthenticationPrincipal String userId){
         try {
-            final FavoriteDTO favoriteDTO = favoriteService.selectOne(dto, userId);
-            return ResponseEntity.ok().body(favoriteDTO);
+            ResponseDTO<FavoriteDTO> res = favoriteService.selectOne(dto, userId);
+            return ResponseEntity.ok().body(res);
         } catch (Exception e) {
-            ResponseDTO<Object> res = ResponseDTO.builder().error(e.getMessage()).build();
+            ResponseDTO<Object> res = ResponseDTO.builder().message(e.getMessage()).build();
             return ResponseEntity.badRequest().body(res);
         }
         
