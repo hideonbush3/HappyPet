@@ -26,6 +26,8 @@ export default function Writing(){
         document.getElementById('content').focus({preventScroll: true});
     }
     
+    // 본문 입력마다 내용을 추적했을때 첨부했던 이미지를 삭제했는지 파악하고
+    // 삭제했을경우 요청할때 보낼 데이터를 업데이트하기 위함
     useEffect(() => {
         detachImage();
     }, [content])
