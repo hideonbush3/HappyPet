@@ -34,7 +34,20 @@ export default function Modify(){
         if(post.title === title && post.content === content){
             alert("변경된 내용이 없습니다");
             return;
+        }else if(title === ''){
+            alert('제목을 입력하세요');
+            return;
         }
+
+        const input = document.getElementById('content');
+        const text = input.textContent.trim();
+        const images = input.querySelectorAll('img');
+
+        if(text === '' && images.length === 0){
+            alert('내용을 입력하세요');
+            return;
+        }
+        
       call('/post/modify', 'PUT', {id: post.id, title: title, content: content})
       .then((res) => {
         if(res === undefined || res === null){
