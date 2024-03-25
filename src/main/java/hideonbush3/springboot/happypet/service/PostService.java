@@ -8,8 +8,8 @@ import hideonbush3.springboot.happypet.dto.PostDTO;
 
 public interface PostService {
     public List<PostDTO> select();
-    public PostDTO insert(String title, String content, List<MultipartFile> images, String urlAndName, String userId); 
-    public PostDTO update(PostDTO dto, String userId);
+    public PostDTO insert(String userId, String title, String content, List<MultipartFile> images, String urlAndName); 
+    public PostDTO update(String userId, Long id, String title, String content, List<MultipartFile> images, String urlAndName, String[] imagesToDelete); 
     public boolean delete(Long id);
 
     public PostDTO selectOne(Long id);

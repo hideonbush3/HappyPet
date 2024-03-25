@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -16,6 +17,7 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -49,9 +51,11 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
+    @Transactional
     public PostDTO insert(
-        String title, String content, List<MultipartFile> images, 
-        String urlAndName, String userId) {
+        String userId, String title, 
+        String content, List<MultipartFile> images, 
+        String urlAndName) {
         try{
             // Validation
             Optional<UserEntity> optionalUserEntity = userRepository.findById(userId);
@@ -129,18 +133,31 @@ public class PostServiceImpl implements PostService{
     }
     
     @Override
-    public PostDTO update(PostDTO dto, String userId) {
+    @Transactional
+    public PostDTO update(
+        String userId, Long id,
+        String title, String content, 
+        List<MultipartFile> images, String urlAndName, 
+        String[] imagesToDelete) {
+        userRepository.findById(userId).orElseThrow(() -> new RuntimeException("존재하지 않는 유저"));
+        
         try{
-            Optional<PostEntity> origin = postRepository.findById(dto.getId());
+            Optional<PostEntity> origin = postRepository.findById(id);
 
             origin.ifPresent(post -> {
-                post.setTitle(dto.getTitle());
-                post.setContent(dto.getContent());
+                post.setTitle(title);
+                post.setContent(content);
 
                 postRepository.save(post);
             });
+            if (imagesToDelete.length > 0) {
+                Arrays.stream(imagesToDelete)
+                      .peek(imageRepository::deleteByName)
+                      .map(imageName -> new File(imageDir + imageName))
+                      .forEach(File::delete);
+            }
 
-            PostEntity updatedEntity = postRepository.findById(dto.getId()).get();
+            PostEntity updatedEntity = postRepository.findById(id).get();
             return PostDTO.convertToDto(updatedEntity);
         }catch(Exception e){
             throw new RuntimeException(e.getMessage());
