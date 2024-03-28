@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react"; 
 import style from './Join.module.css';
 import { call, signup } from "../../service/ApiService";
+import ToastMessage from "../../component/ToastMessage";
 
 function Join(props){
     const process = props.title === 'join' ? '회원가입' : '내 정보 수정';
@@ -14,6 +15,15 @@ function Join(props){
     const [nickname, setNickname] = useState('');
     const [email1, setEmail1] = useState('');
     const [email2, setEmail2] = useState('');
+    
+    const API = '/emailauth';
+    const [authCode, setAuthCode] = useState('');
+    const [authCodeCreatedDate, setAuthCodeCreatedDate] = useState('');
+    const [showAuthCodeInput, setShowAuthCodeInput] = useState(false);
+    const [authCodeBtnText, setAuthCodeBtnText] = useState('이메일 인증코드 전송');
+    const [showToastMessage, setShowToastMessage] = useState(false);
+    const [timer, setTimer] = useState(300);
+    const [verifiedEmail, setVerifiedEmail] = useState('');
 
     const onChangeHandler = (e, type) => {
         e.preventDefault();
@@ -23,6 +33,7 @@ function Join(props){
             case 'repassword': setRepassword(e.target.value);   break;
             case 'nickname': setNickname(e.target.value);       break;
             case 'email1': setEmail1(e.target.value);           break;
+            case 'authcode': setAuthCode(e.target.value);       break;
             default: setEmail2(e.target.value);  break;  
         }
     }
@@ -35,20 +46,7 @@ function Join(props){
 
     const [emailOption, setEmailOption] = useState('직접입력');
     const [cantWrite, setCantWrite] = useState(false);
-
-    const handleEmailChange = (e) => {
-        e.preventDefault();
-        if(e.target.value === '직접입력'){
-            setCantWrite(false);
-            setEmailOption(e.target.value);
-        }else {
-            setCantWrite(true);
-            setEmailOption(e.target.value);
-            setEmail2(e.target.value);
-        }
-        
-    };
-
+    
     useEffect(() => {
         if(process === '내 정보 수정'){
             call('/user', 'GET', null)
@@ -65,6 +63,19 @@ function Join(props){
         }
     }, []);
 
+    const handleEmailChange = (e) => {
+        e.preventDefault();
+        if(e.target.value === '직접입력'){
+            setCantWrite(false);
+            setEmailOption(e.target.value);
+        }else {
+            setCantWrite(true);
+            setEmailOption(e.target.value);
+            setEmail2(e.target.value);
+        }
+        
+    };
+
     useEffect(() => {
         const dom = document.getElementById("email2");
         if(emailOption === "직접입력"){
@@ -75,7 +86,100 @@ function Join(props){
         }
     }, [emailOption])
 
-    function handleSubmit(e){
+    useEffect(() => {
+        let countdown;
+
+        const startTimer = () => {
+            countdown = setInterval(() => {
+                setTimer((prevTimer) => {
+                    if (prevTimer === 0) {
+                        clearInterval(countdown);
+                        return 0;
+                    }
+                    return prevTimer - 1;
+                });
+            }, 1000);
+        };
+
+        if (authCodeCreatedDate.length > 0) {
+            // authCodeCreatedDate 값이 있을 때만 타이머 시작
+            startTimer();
+        }
+
+        return () => {
+            clearInterval(countdown);
+        };
+    }, [authCodeCreatedDate]);
+
+    const formatTime = (time) => {
+        const minutes = Math.floor(time / 60);
+        const seconds = time % 60;
+        return `${minutes}:${seconds < 10 ? `0${seconds}` : seconds}`;
+    };
+    
+    const requestAuthCode = (e, anotherEmailAuth) => {
+        e.preventDefault();
+
+        if(anotherEmailAuth === true){
+            setAuthCodeBtnText('이메일 인증코드 전송');
+            setAuthCode('');
+            setVerifiedEmail('');
+            return;
+        }
+
+        if(email1 === null || email2 ==="직접입력"){
+            alert("이메일을 입력하세요.");
+            return;
+        }
+
+        if(!emailSuffixRegex.test(email2)){
+            alert("이메일형식이 맞지않습니다.")
+            return;
+        }
+
+        const email = email1 + '@' + email2;
+
+        setShowToastMessage(true);
+        const params = authCodeBtnText === '이메일 인증코드 전송' ? '' : `&createdDate=${authCodeCreatedDate}`;
+        call(`${API}?email=${email}${params}`, 'POST')
+        .then((res) => {
+            return res.object;
+        })
+        .then((object) => {
+            console.log(object);
+            setAuthCodeCreatedDate(object.createdDate);
+            setShowAuthCodeInput(true);
+        })
+        .finally(() => {
+            setAuthCodeBtnText('인증코드 재전송');
+            setShowToastMessage(false);
+            setTimer(10);
+        })
+    }
+
+    const verifyAuthCode = () => {
+        const email = email1 + '@' + email2;
+        call(API, 'DELETE', {
+            email: email,
+            authCode: authCode})
+        .then((res) => {
+            return res.message;
+        })
+        .then((msg) => {
+            if(msg === '인증성공') {
+                alert('이메일 인증을 완료했습니다.');
+                setShowAuthCodeInput(false);
+                setAuthCodeBtnText('다른 메일로 인증하기');
+                setVerifiedEmail(email);
+            }else if(msg === '유효시간종료') {
+                alert('이미 만료된 인증코드입니다.\n인증코드를 재전송하세요.');
+
+            }else{
+                alert('인증코드가 올바르지 않습니다.');
+            }
+        })
+    }
+    const handleSubmit = (e) => {
         e.preventDefault();
 
         if (!usernameRegex.test(username)) {
@@ -108,13 +212,8 @@ function Join(props){
             return;
         }
 
-        if(email1 === null || email2 ==="직접입력"){
-            alert("이메일을 입력하세요.");
-            return;
-        }
-
-        if(!emailSuffixRegex.test(email2)){
-            alert("이메일형식이 맞지않습니다.")
+        if(verifiedEmail.length === 0) {
+            alert('이메일 인증을 완료해야합니다.');
             return;
         }
 
@@ -184,13 +283,36 @@ function Join(props){
                         </select>
                     </div>
                 </div>
+                <div className={style.formGroup} hidden={!showAuthCodeInput}>
+                    <label htmlFor="authcode">인증코드를 입력하세요</label>
+                    <span style={{ color: timer === 0 ? 'red' : 'initial' }}>
+                        {timer > 0 ?formatTime(timer) : '인증코드가 만료됐습니다 재전송 하세요'}
+                    </span>
+                    <div className={style.authcode}>
+                        <input type='password' id="authcode" value={authCode} 
+                                onChange={(e) => onChangeHandler(e, 'authcode')}/>
+                        <button onClick={verifyAuthCode}>인증하기</button>
+                    </div>
+                </div>
+                <div>
+                    <button className='mb-2' style={{width: '100%'}} 
+                            onClick={(e) => requestAuthCode(e, authCodeBtnText === '다른 메일로 인증하기' ? true : false)} >
+                            {authCodeBtnText}
+                    </button>
+                </div>
 
                 <div>
-                <button className={style.submit_btn}style={{width: '100%'}}type="submit">{btn}</button>
+                    <button className={style.submit_btn}
+                            style={{width: '100%'}}
+                            type="submit">{btn}
+                    </button>
                 </div>
             </form>
 
         </div>
+        <ToastMessage 
+            show={showToastMessage}
+            process='인증코드 보내는중..<br />잠시만 기다려주세요'/>
         </div>
      
     )

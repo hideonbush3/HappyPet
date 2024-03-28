@@ -77,5 +77,21 @@ input[type="text"], input[type="email"], input[type="password"] {
     margin-bottom: 10px;
     padding: 10px;
     border: none;
-    border-bottom: 1px solid black;
+}
+
+.authcode{
+    display: flex; 
+    align-items: center;
+}
+
+.authcode button{
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.5);
+    color: black;
+    background-color: white;
+    margin-left: 10px;
+}
+
+.authcode button:hover{
+    background-color: gray;
+    color: white;
 }
