@@ -35,7 +35,7 @@ function InfoModal(props){
       .then((res) => {
         if(res.error === undefined){
           setAddedToFavorites(res);
-          setProcess("즐겨찾기 추가")
+          setProcess("즐겨찾기 추가 완료!")
           callToastMessage();
         }else{
           alert("이미 즐겨찾기 추가한 시설입니다.")
@@ -47,7 +47,7 @@ function InfoModal(props){
       call('/favorite/removeinmodal', 'DELETE', addedToFavorites)
       .catch(error => {
         setAddedToFavorites(null);
-        setProcess("즐겨찾기 삭제")
+        setProcess("즐겨찾기 삭제 완료!")
         callToastMessage();
       })
     }
