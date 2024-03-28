@@ -30,6 +30,7 @@ import hideonbush3.springboot.happypet.model.UserEntity;
 import hideonbush3.springboot.happypet.persistence.ImageRepository;
 import hideonbush3.springboot.happypet.persistence.PostRepository;
 import hideonbush3.springboot.happypet.persistence.UserRepository;
+import hideonbush3.springboot.happypet.utils.Utils;
 
 @Service
 public class PostServiceImpl implements PostService{
@@ -78,8 +79,7 @@ public class PostServiceImpl implements PostService{
                 }
     
                 for(Map.Entry<String, String> entry : map.entrySet()){
-                    UUID randomUuid = UUID.randomUUID();
-                    String uuidString = uuid + randomUuid.toString().replace("-", "").substring(0, 4);
+                    String uuidString = uuid + Utils.createUuid(0, 4);
                     
                     String key = entry.getKey();
                     String value = entry.getValue();
