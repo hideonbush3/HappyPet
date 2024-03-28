@@ -12,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 
@@ -48,21 +47,5 @@ public class EmailAuthController {
             res.setError(e.getMessage());
             return ResponseEntity.badRequest().body(res);
         }
-    }
-
-    // 
-    // Configuration of RequestBody -> String email, String createdDate
-    @PutMapping
-    public ResponseEntity<?> remove(@RequestBody EmailAuthDTO dto){
-        try {
-            ResponseDTO<EmailAuthDTO> res = emailAuthService.delete(dto);
-            return ResponseEntity.ok().body(res);
-        } catch (Exception e) {
-            ResponseDTO<Object> res = new ResponseDTO<>();
-            res.setError(e.getMessage());
-            return ResponseEntity.badRequest().body(res);
-        }
-    }
-    
-    
+    }   
 }
