@@ -6,12 +6,11 @@ import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import hideonbush3.springboot.happypet.dto.EmailAuthDTO;
+import hideonbush3.springboot.happypet.dto.EmailContentDTO;
 import hideonbush3.springboot.happypet.dto.ResponseDTO;
 import hideonbush3.springboot.happypet.model.EmailAuthEntity;
 import hideonbush3.springboot.happypet.persistence.EmailAuthRepository;
@@ -21,9 +20,8 @@ import hideonbush3.springboot.happypet.utils.Utils;
 public class EmailAuthServiceImpl implements EmailAuthService{
     @Autowired
     EmailAuthRepository emailAuthRepository;
-    
     @Autowired
-    JavaMailSender mailSender;
+    private MailService mailService;
 
     @Transactional
     @Override
@@ -61,7 +59,7 @@ public class EmailAuthServiceImpl implements EmailAuthService{
 
     @Transactional
     @Override
-    public ResponseDTO<EmailAuthDTO> insert(String email, String createdDate) {
+    public ResponseDTO<EmailAuthDTO> insert(String email, EmailContentDTO emailContentDTO, String createdDate) {
         try {
             if(createdDate != null){
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS");
@@ -71,12 +69,9 @@ public class EmailAuthServiceImpl implements EmailAuthService{
             String authCode = Utils.createUuid(0, 8);
             LocalDateTime now = LocalDateTime.now();
             
-            SimpleMailMessage message = new SimpleMailMessage();
-            message.setTo(email);
-            message.setSubject("HappyPet 이메일 인증코드 입니다");
-            message.setText("인증코드는 " + authCode + " 입니다.\n회원가입 페이지로 돌아가 이메일 인증을 완료하세요.");
-    
-            mailSender.send(message);
+            String title = emailContentDTO.getTitle();
+            String body = String.format(emailContentDTO.getBody(), authCode);
+            mailService.sendMail(email, title, body);
             
             EmailAuthEntity emailAuthEntity = new EmailAuthEntity();
             emailAuthEntity.setAuthCode(authCode);
@@ -85,14 +80,11 @@ public class EmailAuthServiceImpl implements EmailAuthService{
 
             EmailAuthEntity savedEntity = emailAuthRepository.save(emailAuthEntity);
             EmailAuthDTO dto = EmailAuthDTO.convertToDto(savedEntity);
-
             ResponseDTO<EmailAuthDTO> res = new ResponseDTO<>();
             res.setObject(dto);
             return res;
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }
-
     }    
 }
-                            

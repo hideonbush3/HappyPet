@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import hideonbush3.springboot.happypet.dto.EmailAuthDTO;
+import hideonbush3.springboot.happypet.dto.EmailContentDTO;
 import hideonbush3.springboot.happypet.dto.ResponseDTO;
 import hideonbush3.springboot.happypet.service.EmailAuthService;
 
@@ -37,10 +38,14 @@ public class EmailAuthController {
     }
 
     // 인증코드 생성, 재생성
+    // Configuration of RequestBody -> String title, String body
     @PostMapping
-    public ResponseEntity<?> create(@RequestParam String email, @RequestParam(required = false) String createdDate) {
+    public ResponseEntity<?> create(
+        @RequestParam String email, 
+        @RequestParam(required = false) String createdDate,
+        @RequestBody EmailContentDTO emailContentDTO) {
         try {
-            ResponseDTO<EmailAuthDTO> res = emailAuthService.insert(email, createdDate);
+            ResponseDTO<EmailAuthDTO> res = emailAuthService.insert(email, emailContentDTO, createdDate);
             return ResponseEntity.ok().body(res);
         } catch (Exception e) {
             ResponseDTO<Object> res = new ResponseDTO<>();
