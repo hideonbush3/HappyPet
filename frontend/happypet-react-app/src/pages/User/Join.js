@@ -138,23 +138,29 @@ function Join(props){
         }
 
         const email = email1 + '@' + email2;
-
-        setShowToastMessage(true);
-        const params = authCodeBtnText === '이메일 인증코드 전송' ? '' : `&createdDate=${authCodeCreatedDate}`;
-        call(`${API}?email=${email}${params}`, 'POST')
+        call(`/user/isExist?email=${email}`, 'GET')
         .then((res) => {
-            return res.object;
-        })
-        .then((object) => {
-            console.log(object);
-            setAuthCodeCreatedDate(object.createdDate);
-            setShowAuthCodeInput(true);
-        })
-        .finally(() => {
-            setAuthCodeBtnText('인증코드 재전송');
-            setShowToastMessage(false);
-            setTimer(10);
-        })
+            if(res.message !== null){
+                alert('이미 가입한 이메일 입니다.\n하나의 이메일로 중복가입 할 수 없습니다.');
+                return;
+            }
+
+            setShowToastMessage(true);
+            const params = authCodeBtnText === '이메일 인증코드 전송' ? '' : `&createdDate=${authCodeCreatedDate}`;
+            call(`${API}?email=${email}${params}`, 'POST')
+            .then((res) => {
+                return res.object;
+            })
+            .then((object) => {
+                setAuthCodeCreatedDate(object.createdDate);
+                setShowAuthCodeInput(true);
+            })
+            .finally(() => {
+                setAuthCodeBtnText('인증코드 재전송');
+                setShowToastMessage(false);
+                setTimer(10);
+            });
+        });
     }
 
     const verifyAuthCode = () => {
