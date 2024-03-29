@@ -147,7 +147,10 @@ function Join(props){
 
             setShowToastMessage(true);
             const params = authCodeBtnText === '이메일 인증코드 전송' ? '' : `&createdDate=${authCodeCreatedDate}`;
-            call(`${API}?email=${email}${params}`, 'POST')
+            call(`${API}?email=${email}${params}`, 'POST', {
+                title: 'HappyPet 이메일 인증코드',
+                body: '인증코드는 %s 입니다.\n회원가입으로 돌아가세요.'
+            })
             .then((res) => {
                 return res.object;
             })
@@ -158,7 +161,7 @@ function Join(props){
             .finally(() => {
                 setAuthCodeBtnText('인증코드 재전송');
                 setShowToastMessage(false);
-                setTimer(10);
+                setTimer(300);
             });
         });
     }
@@ -291,8 +294,8 @@ function Join(props){
                 </div>
                 <div className={style.formGroup} hidden={!showAuthCodeInput}>
                     <label htmlFor="authcode">인증코드를 입력하세요</label>
-                    <span style={{ color: timer === 0 ? 'red' : 'initial' }}>
-                        {timer > 0 ?formatTime(timer) : '인증코드가 만료됐습니다 재전송 하세요'}
+                    <span style={{ color: timer === 60 ? 'red' : 'initial' }}>
+                        {timer > 0 ? '남은시간 ' + formatTime(timer) : '인증코드가 만료됐습니다 재전송 하세요'}
                     </span>
                     <div className={style.authcode}>
                         <input type='password' id="authcode" value={authCode} 
