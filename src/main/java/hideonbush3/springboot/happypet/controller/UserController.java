@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 import hideonbush3.springboot.happypet.dto.ResponseDTO;
 import hideonbush3.springboot.happypet.dto.UserDTO;
 import hideonbush3.springboot.happypet.model.UserEntity;
-import hideonbush3.springboot.happypet.security.TokenProvider;
 import hideonbush3.springboot.happypet.service.UserService;
 
 @RestController
@@ -29,9 +28,6 @@ public class UserController {
     
     @Autowired
     private UserService ussrv;
-
-    @Autowired
-    private TokenProvider tp;
 
     private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
