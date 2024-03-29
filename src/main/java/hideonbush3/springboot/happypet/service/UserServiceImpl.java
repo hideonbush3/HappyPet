@@ -123,4 +123,16 @@ public class UserServiceImpl implements UserService{
         return UserDTO.convertToDto(updatedUserInfo);
     }
     
+    @Override
+    public ResponseDTO<Object> isExistByEmail(String email){
+        try {
+            ResponseDTO<Object> res = new ResponseDTO<>();
+            if(userRepository.existsByEmail(email)){
+                res.setMessage("이미 가입한 이메일");
+            }
+            return res;
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
 }

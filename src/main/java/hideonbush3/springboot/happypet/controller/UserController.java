@@ -122,5 +122,16 @@ public class UserController {
             return ResponseEntity.badRequest().body(res);
         }        
     }
-    
+
+    // 이메일 인증시 이메일 중복여부
+    @GetMapping("/isExist")
+    public ResponseEntity<?> readByEmail(@RequestParam String email){
+        try {
+            return ResponseEntity.ok().body(ussrv.isExistByEmail(email));
+        } catch (Exception e) {
+            ResponseDTO<Object> res = new ResponseDTO<>();
+            res.setError(e.getMessage());
+            return ResponseEntity.badRequest().body(res);
+        }
+    }
 }

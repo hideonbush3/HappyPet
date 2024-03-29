@@ -13,4 +13,5 @@ public interface UserService {
     void delete(String userId);
     UserDTO isExist(UserDTO userDTO, PasswordEncoder passwordEncoder, String userId);
     UserDTO update(UserDTO userDTO, PasswordEncoder passwordEncoder);
+    ResponseDTO<Object> isExistByEmail(String email);
 }
