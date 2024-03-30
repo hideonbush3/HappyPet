@@ -44,6 +44,11 @@ function Login() {
                     계정이 없습니까? 여기서 가입하세요.
                 </Link>
             </div>
+            <div className="mt-2">
+                <Link to="/user/findaccount" className={`${style.joinLink}`}>
+                    계정정보를 잊으셨나요?
+                </Link>
+            </div>
 
         </div>
         </div>

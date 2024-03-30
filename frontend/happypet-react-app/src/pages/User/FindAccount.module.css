@@ -1,0 +1,50 @@
+.container {
+    margin-top: 100px;
+    display: grid;
+    place-items: center;
+    height: 100%;
+}
+
+.logo{
+    font-weight: bold;
+    font-size: 30px;
+    color: #15ae9a;
+}
+
+.guide{
+    margin: 10px 0 40px 0;
+    font-size: 19px;
+    font-weight: bold;
+}
+
+.find_btn{
+    margin-bottom: 17px;
+    display: flex;
+    width: 460px;
+    height: 60px;
+    border-radius: 10px;
+    outline: 1px solid #15ae9a;
+}
+
+
+p{
+    display: flex;
+    align-items: center;
+    color: black;
+}
+
+.icon{
+    margin-left: 15px;
+    font-size: 25px;
+    height: 100%;
+}
+
+.find_text{
+    margin-left: 20px;
+    font-size: 17px;
+    font-weight: bold;
+}
+
+.logo:hover, .find_btn:hover{
+    cursor: pointer;
+}
