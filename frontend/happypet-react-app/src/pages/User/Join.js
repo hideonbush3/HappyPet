@@ -138,11 +138,13 @@ function Join(props){
         }
 
         const email = email1 + '@' + email2;
-        call(`/user/isExist?email=${email}`, 'GET')
+        call(`/user/is-exist?email=${email}`, 'GET')
         .then((res) => {
-            if(res.message !== null){
+            if(res.message === '존재하는이메일'){
                 alert('이미 가입한 이메일 입니다.\n하나의 이메일로 중복가입 할 수 없습니다.');
                 return;
+            }else if(res.error !== null){
+                alert('시스템상의 문제가 발생했습니다.\n재전송하시고도 문제가 발생하면 관리자에게 문의하세요.')
             }
 
             setShowToastMessage(true);
