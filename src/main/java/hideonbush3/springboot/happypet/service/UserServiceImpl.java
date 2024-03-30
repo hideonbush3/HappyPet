@@ -128,8 +128,8 @@ public class UserServiceImpl implements UserService{
         try {
             ResponseDTO<Object> res = new ResponseDTO<>();
             if(userRepository.existsByEmail(email)){
-                res.setMessage("이미 가입한 이메일");
-            }
+                res.setMessage("존재하는이메일");
+            }else res.setMessage("존재하지않는이메일");
             return res;
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());

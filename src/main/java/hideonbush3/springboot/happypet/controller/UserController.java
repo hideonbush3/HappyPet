@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import hideonbush3.springboot.happypet.dto.ResponseDTO;
 import hideonbush3.springboot.happypet.dto.UserDTO;
 import hideonbush3.springboot.happypet.model.UserEntity;
+import hideonbush3.springboot.happypet.service.MailService;
 import hideonbush3.springboot.happypet.service.UserService;
 
 @RestController
@@ -28,6 +29,9 @@ public class UserController {
     
     @Autowired
     private UserService ussrv;
+
+    @Autowired
+    private MailService mailService;
 
     private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
@@ -123,8 +127,8 @@ public class UserController {
         }        
     }
 
-    // 이메일 인증시 이메일 중복여부
-    @GetMapping("/isExist")
+    // 이메일 중복여부
+    @GetMapping("/is-exist")
     public ResponseEntity<?> readByEmail(@RequestParam String email){
         try {
             return ResponseEntity.ok().body(ussrv.isExistByEmail(email));
@@ -133,5 +137,11 @@ public class UserController {
             res.setError(e.getMessage());
             return ResponseEntity.badRequest().body(res);
         }
+    }
+
+    // 아이디찾기
+    @GetMapping("/find-id")
+    public ResponseEntity<?> findId(@RequestParam String email){
+        return ResponseEntity.ok().body(mailService.sendId(email));
     }
 }
