@@ -35,11 +35,11 @@ function ModifyRoute() {
   function AppContent() {
     const location = useLocation();
 
-    const shouldShowHeaderAndFooter = !location.pathname.startsWith("/user/findaccount");
+    const shouldShowFooter = !location.pathname.startsWith("/user/findaccount") && !location.pathname.startsWith('/user/join') && !location.pathname.startsWith('/user/login');
   
     return (
       <div>
-        {shouldShowHeaderAndFooter && <Header />}
+          <Header />
         <Routes>
           <Route path="/" element={<App />} />
           <Route path="/user/login" element={<Login />} />
@@ -54,7 +54,7 @@ function ModifyRoute() {
           <Route path='/board/view' element={<View />} />
           <Route path='/board/view/modify' element={<Modify />} />
         </Routes>
-        {shouldShowHeaderAndFooter && <Footer />}
+        {shouldShowFooter && <Footer />}
       </div>
     );
 }
