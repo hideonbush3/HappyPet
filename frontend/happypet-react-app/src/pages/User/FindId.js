@@ -21,7 +21,7 @@ export default function FindId(){
             return;
         }
 
-        call(`/user/is-exist?email=${email}`, 'GET')
+        call(`/user/checksignup/email?email=${email}`, 'GET')
         .then((res) => {
             if(res.message === '존재하지않는이메일'){
                 alert('해당 이메일로 가입한 계정은 없습니다.');
@@ -31,11 +31,13 @@ export default function FindId(){
                 setShowToastMessage(true);
                 call(`/user/find-id?email=${email}`, 'GET')
                 .then((res) => {
+                    setShowToastMessage(false);
                     if(res.message === '전송성공'){
-                        setShowToastMessage(false);
-                        alert('이메일로 아이디를 전송했습니다')   
+                        alert('이메일로 아이디를 전송했습니다');
+                        window.location.href = '/user/login';
                     }else if(res.error !== null){
-                        alert('알 수 없는 에러가 발생했습니다.\n재전송 하시거나 관리자에게 문의바랍니다.')
+                        alert('알 수 없는 에러가 발생했습니다.\n재전송 하시거나 관리자에게 문의바랍니다.');
+                        return;
                     }
                 })
                 

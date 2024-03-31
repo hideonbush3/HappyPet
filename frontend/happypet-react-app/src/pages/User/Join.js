@@ -16,7 +16,7 @@ function Join(props){
     const [email1, setEmail1] = useState('');
     const [email2, setEmail2] = useState('');
     
-    const API = '/emailauth';
+    const API = '/auth-code';
     const [authCode, setAuthCode] = useState('');
     const [authCodeCreatedDate, setAuthCodeCreatedDate] = useState('');
     const [showAuthCodeInput, setShowAuthCodeInput] = useState(false);
@@ -138,18 +138,20 @@ function Join(props){
         }
 
         const email = email1 + '@' + email2;
-        call(`/user/is-exist?email=${email}`, 'GET')
+        call(`/user/checksignup/email?email=${email}`, 'GET')
         .then((res) => {
             if(res.message === '존재하는이메일'){
                 alert('이미 가입한 이메일 입니다.\n하나의 이메일로 중복가입 할 수 없습니다.');
                 return;
             }else if(res.error !== null){
-                alert('시스템상의 문제가 발생했습니다.\n재전송하시고도 문제가 발생하면 관리자에게 문의하세요.')
+                alert('시스템상의 문제가 발생했습니다.\n재전송하시고도 문제가 발생하면 관리자에게 문의하세요.');
+                return;
             }
 
             setShowToastMessage(true);
-            const params = authCodeBtnText === '이메일 인증코드 전송' ? '' : `&createdDate=${authCodeCreatedDate}`;
-            call(`${API}?email=${email}${params}`, 'POST', {
+            const params = authCodeBtnText === '이메일 인증코드 전송' ? '' : `?createdDate=${authCodeCreatedDate}`;
+            call(`${API}/create${params}`, 'POST', {
+                email: email,
                 title: 'HappyPet 이메일 인증코드',
                 body: '인증코드는 %s 입니다.\n회원가입으로 돌아가세요.'
             })
@@ -170,7 +172,7 @@ function Join(props){
 
     const verifyAuthCode = () => {
         const email = email1 + '@' + email2;
-        call(API, 'DELETE', {
+        call(API + '/check', 'DELETE', {
             email: email,
             authCode: authCode})
         .then((res) => {
