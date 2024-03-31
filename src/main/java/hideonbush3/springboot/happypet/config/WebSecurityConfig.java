@@ -30,7 +30,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and()
             .authorizeRequests()    // 아래 경로는 인증 안해도 됨
-                .antMatchers("/", "/user/signup", "/user/signin", "/user/is-exist", "/user/find-id", "/post", "/post/view", "/favorite/isexist", "/facilityAPI/**", "/emailauth").permitAll()
+                .antMatchers("/",
+                "/user/signup", "/user/signin", "/user/checksignup/email", "/user/checksignup/id", "/user/find-id",
+                "/post", "/post/view", 
+                "/favorite/isexist", 
+                "/facilityAPI/**", 
+                "/auth-code/**").permitAll()
             .anyRequest()   // 위 경로 이외의 모든 경로는 인증해야됨.
                 .authenticated();
 
