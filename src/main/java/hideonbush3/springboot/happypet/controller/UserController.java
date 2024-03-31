@@ -128,7 +128,7 @@ public class UserController {
     }
 
     // 이메일 중복여부
-    @GetMapping("/is-exist")
+    @GetMapping("/checksignup/email")
     public ResponseEntity<?> readByEmail(@RequestParam String email){
         try {
             return ResponseEntity.ok().body(ussrv.isExistByEmail(email));
@@ -144,4 +144,10 @@ public class UserController {
     public ResponseEntity<?> findId(@RequestParam String email){
         return ResponseEntity.ok().body(mailService.sendId(email));
     }
+
+    // 비밀번호 찾기(해당 아이디로 가입한 유저가 있는지)
+    @GetMapping("/checksignup/id")
+    public ResponseEntity<?> isSignup(@RequestParam String userId){
+        return ResponseEntity.ok().body(ussrv.isExistByUserId(userId));
+    } 
 }

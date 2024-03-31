@@ -135,4 +135,19 @@ public class UserServiceImpl implements UserService{
             throw new RuntimeException(e.getMessage());
         }
     }
+
+    @Override
+    public ResponseDTO<Object> isExistByUserId(String userId) {
+        ResponseDTO<Object> res = new ResponseDTO<>();
+        try {
+            Boolean isSignup = userRepository.existsByUsername(userId);
+            if(isSignup) res.setMessage("존재한다");
+            else res.setMessage("존재하지않음");
+            
+            return res;
+        } catch (Exception e) {
+            res.setError(e.getMessage());
+            return res;
+        }
+    }
 }
