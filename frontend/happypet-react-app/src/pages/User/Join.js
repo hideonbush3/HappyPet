@@ -20,10 +20,11 @@ function Join(props){
     const [authCode, setAuthCode] = useState('');
     const [authCodeCreatedDate, setAuthCodeCreatedDate] = useState('');
     const [showAuthCodeInput, setShowAuthCodeInput] = useState(false);
-    const [authCodeBtnText, setAuthCodeBtnText] = useState('이메일 인증코드 전송');
+    const [authCodeBtnText, setAuthCodeBtnText] = useState(props.title === 'join' ? '이메일 인증코드 전송' : '다른 메일로 인증하기');
     const [showToastMessage, setShowToastMessage] = useState(false);
     const [timer, setTimer] = useState(300);
     const [verifiedEmail, setVerifiedEmail] = useState('');
+
 
     const onChangeHandler = (e, type) => {
         e.preventDefault();
@@ -59,6 +60,7 @@ function Join(props){
                 const email = (res.email).split('@');
                 setEmail1(email[0]);
                 setEmail2(email[1]);
+                setVerifiedEmail(res.email);
             })
         }
     }, []);
@@ -250,7 +252,7 @@ function Join(props){
             }).then((res) => {
                 if(res !== undefined && res.error === '아이디 중복') alert("이미 존재하는 아이디입니다");
                 else if(res !== undefined && res.error === '닉네임 중복') alert("이미 존재하는 닉네임입니다");
-                else {alert("정보 수정 완료"); window.location.href = '/user/mypage/myinfo'}
+                else {alert("회원님의 정보를 수정했습니다."); window.location.href = '/user/mypage/myinfo'}
             });
         }
     }
