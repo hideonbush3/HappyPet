@@ -64,16 +64,11 @@ public class UserController {
 
     @PostMapping("/signin")
     public ResponseEntity<?> authenticate(@RequestBody UserDTO userDTO){
-        ResponseDTO<?> res = ussrv.getByCredentials(
+        ResponseDTO<Object> res = ussrv.getByCredentials(
             userDTO.getUsername(),
             userDTO.getPassword(),
             passwordEncoder);
-
-        if(res.getObject() != null){
-            return ResponseEntity.ok().body(res);
-        }else{
-            return ResponseEntity.badRequest().body(res);
-        }
+        return ResponseEntity.ok().body(res);
     }
     
     // 로그인한 유저 정보

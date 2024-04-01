@@ -8,7 +8,7 @@ import hideonbush3.springboot.happypet.model.UserEntity;
 
 public interface UserService {
     UserEntity create(UserEntity userEntity);
-    ResponseDTO<?> getByCredentials(String username, String password, PasswordEncoder passwordEncoder);
+    ResponseDTO<Object> getByCredentials(String username, String password, PasswordEncoder passwordEncoder);
     UserDTO select(String userId);
     void delete(String userId);
     UserDTO isExist(UserDTO userDTO, PasswordEncoder passwordEncoder, String userId);

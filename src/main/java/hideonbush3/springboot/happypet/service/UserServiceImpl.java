@@ -47,19 +47,31 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public ResponseDTO<?> getByCredentials(final String username, final String password, final PasswordEncoder encoder) {
-        final UserEntity userEntity = userRepository.findByUsername(username);
-        if(userEntity == null) return ResponseDTO.builder().error("아이디").build();
-        if(userEntity != null && encoder.matches(password, userEntity.getPassword())){
-            String token = tokenProvider.create(userEntity);
-            UserDTO userDTO = UserDTO.builder()
-                .username(username)
-                .nickname(userEntity.getNickname())
-                .token(token)
-                .build();
-            return ResponseDTO.builder().object(userDTO).build();
-        }else{
-            return ResponseDTO.builder().error("비밀번호").build();
+    public ResponseDTO<Object> getByCredentials(final String username, final String password, final PasswordEncoder encoder) {
+        ResponseDTO<Object> res = new ResponseDTO<>();
+        try{
+            final UserEntity userEntity = userRepository.findByUsername(username);
+    
+            if(userEntity == null){
+                res.setMessage("아이디불일치");
+                return res;
+            }
+    
+            if(userEntity != null && encoder.matches(password, userEntity.getPassword())){
+                String token = tokenProvider.create(userEntity);
+                UserDTO user = new UserDTO();
+                user.setUsername(username);
+                user.setNickname(userEntity.getNickname());
+                user.setToken(token);
+                res.setObject(user);
+                return res;
+            }else{
+                res.setMessage("비밀번호불일치");
+                return res;
+            }
+        }catch(Exception e){
+            res.setError(e.getMessage());
+            return res;
         }
     }
 
