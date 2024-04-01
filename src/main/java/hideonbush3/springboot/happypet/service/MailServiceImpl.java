@@ -66,8 +66,8 @@ public class MailServiceImpl implements MailService{
     @Transactional
     @Override
     public ResponseDTO<Object> checkAuthCode(AuthMailDTO dto, String process) {
+        ResponseDTO<Object> res = new ResponseDTO<>();
         try {
-            ResponseDTO<Object> res = new ResponseDTO<>();
             String email = dto.getEmail();
             String authCode = dto.getAuthCode();
             Optional<AuthMailEntity> optionalEntity = authMailRepository.findByEmailAndAuthCode(email, authCode);
@@ -104,10 +104,11 @@ public class MailServiceImpl implements MailService{
     
                 authMailRepository.delete(entity);
             }else res.setMessage("틀린인증코드");
-            
+
             return res;
         } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
+            res.setError(e.getMessage());
+            return res;
         }
     }
 

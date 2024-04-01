@@ -30,14 +30,8 @@ public class AuthCodeController {
     public ResponseEntity<?> retrieve(
         @RequestParam(required = false) String process,
         @RequestBody AuthMailDTO dto) {
-        try {
             ResponseDTO<Object> res = mailService.checkAuthCode(dto, process);
             return ResponseEntity.ok().body(res);
-        } catch (Exception e) {
-            ResponseDTO<Object> res =  new ResponseDTO<>();
-            res.setError(e.getMessage());
-            return ResponseEntity.badRequest().body(res);
-        }
     }
 
     // 인증코드 생성, 재생성
