@@ -243,13 +243,21 @@ function Join(props){
                     nickname: nickname,
                     email: email1 + '@' + email2
             }).then((res) => {
-                if(res !== undefined && res.error === '아이디 중복') alert("이미 존재하는 아이디입니다");
-                else if(res !== undefined && res.error === '닉네임 중복') alert("이미 존재하는 닉네임입니다");
-                else window.location.href = "/user/login"
+                if(res.message === '아이디 중복') {
+                    alert("이미 존재하는 아이디입니다.");
+                    return;
+                }
+                else if(res.message === '닉네임 중복'){
+                    alert("이미 존재하는 닉네임입니다.");
+                    return;  
+                }else if(res.error !== null){
+                    alert('알수없는 에러가 발생했습니다.\n재시도하거나 관리자에게 문의하세요.');
+                } 
+                else window.location.href = "/user/login";
             });
         }else{
             call('/user/modify', 'PUT', {
-                username: `${sessionUser.username}/${username}`,
+                username: username,
                 password: password,
                 nickname: nickname,
                 email: email1 + '@' + email2
