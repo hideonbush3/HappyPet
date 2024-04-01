@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "email_auth")
+@Table(name = "auth_mail")
 public class AuthMailEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
