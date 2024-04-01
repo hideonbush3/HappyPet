@@ -1,8 +1,5 @@
 package hideonbush3.springboot.happypet.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -86,29 +83,18 @@ public class UserController {
 
     // 내 정보 수정, 탈퇴 시 재인증
     @PostMapping("/reauth")
-    public ResponseEntity<?> reauth(@RequestBody UserDTO userDTO, @RequestParam String process, @AuthenticationPrincipal String userId) {
-        UserDTO user = ussrv.isExist(userDTO, passwordEncoder, userId);
-        if(user != null){
-            List<UserDTO> entity = new ArrayList<UserDTO>();
-            entity.add(user);
-            ResponseDTO<UserDTO> res = ResponseDTO.<UserDTO>builder().data(entity).message(process).build();
-            return ResponseEntity.ok().body(res);
-        }else{
-            ResponseDTO<Object> res = ResponseDTO.builder().message("비밀번호 틀림").build();
-            return ResponseEntity.badRequest().body(res);
-        }    
+    public ResponseEntity<?> reauth(
+        @RequestBody UserDTO dto,
+        @RequestParam String process,
+        @AuthenticationPrincipal String userId) {
+        ResponseDTO<Object> res = ussrv.isExist(dto, passwordEncoder, userId, process);
+        return ResponseEntity.ok().body(res);    
     }
     
     @DeleteMapping("/remove")
     public ResponseEntity<?> remove(@AuthenticationPrincipal String userId){
-        try {
-            ussrv.delete(userId);
-            ResponseDTO<Object> res = ResponseDTO.<Object>builder().message("탈퇴완료").build();
-            return ResponseEntity.ok().body(res);   
-        } catch (Exception e) {
-            ResponseDTO<Object> res = ResponseDTO.<Object>builder().error(e.getMessage()).build();
-            return ResponseEntity.badRequest().body(res);
-        }
+        ResponseDTO<?> res = ussrv.delete(userId);
+        return ResponseEntity.ok().body(res);
     }
     
     @PutMapping("/modify")

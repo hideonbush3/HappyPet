@@ -1,5 +1,7 @@
 package hideonbush3.springboot.happypet.service;
 
+import java.util.Optional;
+
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,25 +85,37 @@ public class UserServiceImpl implements UserService{
 
     @Transactional
     @Override
-    public void delete(String userId) {
+    public ResponseDTO<?> delete(String userId) {
+        ResponseDTO<?> res = new ResponseDTO<>();
         try {                 
             UserEntity userEntity = userRepository.findById(userId).get();
             replyRepository.deleteAllByUserEntity(userEntity);
             commentRepository.deleteAllByUserEntity(userEntity);
             userRepository.delete(userEntity);  
+            res.setMessage("탈퇴완료");
+            return res;
         } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
+            res.setError(e.getMessage());
+            return res;
         }
     }
 
     @Override
-    public UserDTO isExist(UserDTO userDTO, PasswordEncoder passwordEncoder, String userId) {
-        String password = userDTO.getPassword();
-        UserEntity originUser = userRepository.findById(userId).get();
-        if(passwordEncoder.matches(password, originUser.getPassword())){
-            return UserDTO.convertToDto(originUser);
-        }else{
-            return null;
+    public ResponseDTO<Object> isExist(UserDTO dto, PasswordEncoder passwordEncoder, String userId, String process) {
+        ResponseDTO<Object> res = new ResponseDTO<>();
+          try {
+            Optional<UserEntity> optionalUser = userRepository.findById(userId);
+            UserEntity user = optionalUser.orElse(null);
+            if(passwordEncoder.matches(dto.getPassword(), user.getPassword())){
+                res.setMessage(process);
+                return res;
+            }else{
+                res.setMessage("비밀번호불일치");
+                return res;
+            }
+        } catch (Exception e) {
+            res.setError(e.getMessage());
+            return res;
         }
     }
 
