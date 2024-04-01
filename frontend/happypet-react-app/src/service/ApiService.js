@@ -39,9 +39,15 @@ export function signin(userDTO){
             if(res.object !== null){
                 localStorage.setItem("token", res.object.token);
                 window.location.href = "/"
+            }else if(res.message === '아이디불일치'){
+                alert('해당 아이디와 일치하는 회원은 없습니다.');
+                return;
+            }else if(res.message === '비밀번호불일치'){
+                alert('비밀번호를 다시 확인하세요.');
+                return;
             }else{
-                if(res.error === '아이디') alert('해당 아이디와 일치하는 회원은 없습니다.');
-                else alert('비밀번호를 다시 확인하세요.');
+                alert('알수없는 에러가 발생했습니다.\n재시도하거나 관리자에게 문의하세요');
+                return;
             }
         });
 }
