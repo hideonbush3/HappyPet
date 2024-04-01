@@ -91,26 +91,36 @@ function Mypage(props) {
 
     const reAuth = (password, process) => {
         call(`/user/reauth?process=${process}`, 'POST', {password: password})
-        .then((res) => {          
+        .then((res) => {        
             if(res.message === 'modify') window.location.href = '/user/modify';
             else if(res.message === 'withdrawal'){
                 const result = window.confirm("회원탈퇴 하시겠습니까?");
                 if(result){
-                    call('/user/remove', 'DELETE', null)
+                    call('/user/remove', 'DELETE')
                     .then((res) => {
                         if(res.message === '탈퇴완료'){
                             alert("회원탈퇴가 완료됐습니다.");
                             setShowReAuthModal(false);
                             window.location.href = '/';
                             localStorage.setItem("token", null);
-                        }else alert("회원탈퇴 실패했습니다.");
-                        
-                    })
-                }else setShowReAuthModal(false);
+                        }else{
+                            alert('회원님의 데이터를 삭제하는도중에 알수없는 에러가 발생했습니다.\n재시도하거나 관리자에게 문의하세요.')
+                            return;
+                        }    
+                    });
+                }else {
+                    setShowReAuthModal(false);
+                    return;
+                }
             }
-            else alert("비밀번호를 다시 확인하세요")
+            else if(res.message === '비밀번호불일치'){
+                alert("비밀번호를 다시 확인하세요.");
+                return;
+            }else{
+                alert('비밀번호 확인도중에 알수없는 에러가 발생했습니다.\n재시도하거나 관리자에게 문의하세요.');
+                return;
             }
-        )
+        });
     }
 
     return(
