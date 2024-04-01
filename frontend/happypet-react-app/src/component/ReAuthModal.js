@@ -6,8 +6,8 @@ export default function ReAuthModal(props){
     const process = props.message === '회원정보수정' ? 'modify' : 'withdrawal';
     const authHandler = () => {
         const password = document.getElementById('password');
-        if(password.value.length === 0) {
-            alert("비밀번호를 입력하세요"); return;
+        if(password.value.trim().length === 0) {
+            alert("비밀번호를 입력하세요."); return;
         }
         props.reAuth(password.value, process);
     }
