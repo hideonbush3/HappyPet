@@ -188,9 +188,13 @@ function Join(props){
                 setVerifiedEmail(email);
             }else if(msg === '유효시간종료') {
                 alert('이미 만료된 인증코드입니다.\n인증코드를 재전송하세요.');
-
-            }else{
+                return;
+            }else if(msg === '틀린인증코드'){
                 alert('인증코드가 올바르지 않습니다.');
+                return;
+            }else{
+                alert('알수없는 에러가 발생했습니다\n재시도하거나 관리자에게 문의하세요.');
+                return;
             }
         })
     }
