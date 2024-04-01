@@ -9,12 +9,12 @@ function Login() {
         const data = new FormData(e.target);
         const username = data.get("username");
         const password = data.get("password");
-        if(username == null){
+        if(username.trim().length === 0){
             alert("아이디를 입력하세요");
             return;
         }
 
-        if(password == null){
+        if(password.trim().length === 0){
             alert("비밀번호를 입력하세요");
             return;
         }
