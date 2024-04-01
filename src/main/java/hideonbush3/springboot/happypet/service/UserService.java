@@ -4,10 +4,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import hideonbush3.springboot.happypet.dto.ResponseDTO;
 import hideonbush3.springboot.happypet.dto.UserDTO;
-import hideonbush3.springboot.happypet.model.UserEntity;
 
 public interface UserService {
-    UserEntity create(UserEntity userEntity);
+    ResponseDTO<Object> create(UserDTO dto);
     ResponseDTO<Object> getByCredentials(String username, String password, PasswordEncoder passwordEncoder);
     UserDTO select(String userId);
     ResponseDTO<?> delete(String userId);

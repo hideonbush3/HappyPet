@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import hideonbush3.springboot.happypet.dto.ResponseDTO;
 import hideonbush3.springboot.happypet.dto.UserDTO;
-import hideonbush3.springboot.happypet.model.UserEntity;
 import hideonbush3.springboot.happypet.service.MailService;
 import hideonbush3.springboot.happypet.service.UserService;
 
@@ -34,29 +33,8 @@ public class UserController {
 
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@RequestBody UserDTO userDTO){
-        try {
-            if(userDTO == null || userDTO.getPassword() == null){
-                throw new RuntimeException("비밀번호를 다시 확인하세요");
-            }
-
-            UserEntity user = UserEntity.builder()
-                .username(userDTO.getUsername())
-                .password(passwordEncoder.encode(userDTO.getPassword()))
-                .nickname(userDTO.getNickname())
-                .email(userDTO.getEmail())
-                .build();
-
-            UserEntity registeredUser = ussrv.create(user);
-            UserDTO resUserDTO = UserDTO.builder()
-                .id(registeredUser.getId())
-                .username(userDTO.getUsername())
-                .build();
-        
-            return ResponseEntity.ok().body(resUserDTO);
-        } catch (Exception e) {
-            ResponseDTO<Object> res = ResponseDTO.builder().error(e.getMessage()).build();
-            return ResponseEntity.badRequest().body(res);
-        }
+        ResponseDTO<Object> res = ussrv.create(userDTO);
+        return ResponseEntity.ok().body(res);
     }
 
     @PostMapping("/signin")

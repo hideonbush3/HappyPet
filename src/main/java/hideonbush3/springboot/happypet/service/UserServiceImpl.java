@@ -5,6 +5,7 @@ import java.util.Optional;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -31,21 +32,38 @@ public class UserServiceImpl implements UserService{
     @Autowired
     private TokenProvider tokenProvider;
 
-    @Override
-    public UserEntity create(final UserEntity userEntity) {
-        if(userEntity == null || userEntity.getUsername() == null){
-            throw new RuntimeException("유효하지 않은 인자");
-        }
-        final String username = userEntity.getUsername();
-        if(userRepository.existsByUsername(username)){
-            throw new RuntimeException("아이디 중복");
-        }
-        
-        if(userRepository.existsByNickname(userEntity.getNickname())){
-            throw new RuntimeException("닉네임 중복");
-        }
+    PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-        return userRepository.save(userEntity);
+    @Override
+    public ResponseDTO<Object> create(UserDTO dto) {
+        ResponseDTO<Object> res = new ResponseDTO<>();
+        try {
+            String username = dto.getUsername();
+            if(userRepository.existsByUsername(username)){
+                res.setMessage("아이디 중복");
+            }else if(userRepository.existsByNickname(dto.getNickname())){
+                res.setMessage("닉네임 중복");
+            }else{
+                UserEntity user = UserEntity.builder()
+                .username(dto.getUsername())
+                .password(passwordEncoder.encode(dto.getPassword()))
+                .nickname(dto.getNickname())
+                .email(dto.getEmail())
+                .build();
+        
+                UserEntity registeredUser = userRepository.save(user);
+        
+                UserDTO userDTO = new UserDTO();
+                userDTO.setId(registeredUser.getId());
+                userDTO.setUsername(dto.getUsername());
+
+                res.setObject(userDTO);
+            }
+            return res;
+        } catch (Exception e) {
+            res.setError(e.getMessage());
+            return res;
+        }
     }
 
     @Override
