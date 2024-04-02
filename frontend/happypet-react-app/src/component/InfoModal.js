@@ -52,12 +52,18 @@ function InfoModal(props){
 
     const clickDeleteFavorite = () => {
       call('/favorite/removeinmodal', 'DELETE', addedToFavorites)
-      .catch(error => {
-        setAddedToFavorites(null);
-        setProcess("즐겨찾기 삭제 완료!")
-        callToastMessage();
-      })
+      .then((res) => {
+        if(res.message === '삭제성공'){
+          setAddedToFavorites(null);
+          setProcess('즐겨찾기 삭제 완료!');
+          callToastMessage();
+        }else if(res.error !== null){
+          alert('알수없는 에러가 발생했습니다.\n재시도하거나 관리자에게 문의하세요.');
+          return;
+        }
+      });
     }
+    
     return(
       <Modal {...props} aria-labelledby="contained-modal-title-vcenter">
       <Modal.Header closeButton className={`${style.header}`}>
