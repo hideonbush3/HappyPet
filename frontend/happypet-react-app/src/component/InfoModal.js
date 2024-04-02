@@ -33,18 +33,19 @@ function InfoModal(props){
 
     const clickAddFavorite = () => {
       const token = localStorage.getItem('happypetToken');
-      if(token === null){
+      if(token === 'null'){
         alert('즐겨찾기 추가를 하려면 로그인하셔야 합니다.');
         return;
       }
       call('/favorite', 'POST', facility)
       .then((res) => {
-        if(res.error === undefined){
-          setAddedToFavorites(res);
+        if(res.object !== null){
+          setAddedToFavorites(res.object);
           setProcess("즐겨찾기 추가 완료!")
           callToastMessage();
-        }else{
-          alert("이미 즐겨찾기 추가한 시설입니다.")
+        }else if(res.error !== null){
+          alert('알수없는 에러가 발생했습니다.\n재시도하거나 관리자에게 문의하세요.');
+          return;
         }
       })
     }
