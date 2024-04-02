@@ -30,7 +30,12 @@ export default function View(){
         contentContainer.innerHTML = post.content;
         call('/user', 'GET', null)
         .then((res) => {
-            setSessionUser(res);
+            if(res.object !== null){
+                setSessionUser(res.object);
+            }else if(res.error !== null){
+                alert('게시글 상세보기에서 로그인한 유저의 정보를 불러오다 실패했습니다.\n관리자에게 문의하세요.');
+                return;
+            }
         });
     }, [])    
     

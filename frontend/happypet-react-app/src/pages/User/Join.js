@@ -52,15 +52,20 @@ function Join(props){
         if(process === '내 정보 수정'){
             call('/user', 'GET', null)
             .then((res) => {
-                setSessionUser(res);
-                setUsername(res.username);
-                setPassword(res.password);
-                setRepassword(res.password);
-                setNickname(res.nickname);
-                const email = (res.email).split('@');
-                setEmail1(email[0]);
-                setEmail2(email[1]);
-                setVerifiedEmail(res.email);
+                if(res.object !== null){
+                    setSessionUser(res.object);
+                    setUsername(res.object.username);
+                    setPassword(res.object.password);
+                    setRepassword(res.object.password);
+                    setNickname(res.object.nickname);
+                    const email = (res.object.email).split('@');
+                    setEmail1(email[0]);
+                    setEmail2(email[1]);
+                    setVerifiedEmail(res.object.email);
+                }else if(res.error !== null){
+                    alert('유저 정보를 불러오다 실패했습니다.\n관리자에게 문의하세요.');
+                    return;
+                }
             })
         }
     }, []);

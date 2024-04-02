@@ -31,7 +31,12 @@ function Mypage(props) {
     useEffect(() => {
         call('/user', 'GET', null)
         .then((res) => {
-            setSessionUser(res)
+            if(res.object !== null){
+                setSessionUser(res.object);
+            }else if(res.error !== null){
+                alert('마이페이지에서 유저 정보를 불러오다 실패했습니다.\n관리자에게 문의하세요');
+                return;
+            }
         })
     }, [])
 
