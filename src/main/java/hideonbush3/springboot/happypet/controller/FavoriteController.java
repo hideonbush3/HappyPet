@@ -47,13 +47,8 @@ public class FavoriteController {
 
     @PostMapping
     public ResponseEntity<?> create(@RequestBody FavoriteDTO dto, @AuthenticationPrincipal String userId){
-        try {
-            FavoriteDTO res = favoriteService.insert(dto, userId);
+            ResponseDTO<Object> res = favoriteService.insert(dto, userId);
             return ResponseEntity.ok().body(res);
-        } catch (Exception e) {
-            ResponseDTO<Object> res = ResponseDTO.builder().error(e.getMessage()).build();
-            return ResponseEntity.badRequest().body(res);
-        }
     }
 
     @DeleteMapping

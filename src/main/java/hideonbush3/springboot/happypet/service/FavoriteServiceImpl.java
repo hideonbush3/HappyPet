@@ -45,22 +45,19 @@ public class FavoriteServiceImpl implements FavoriteService{
             throw new RuntimeException(e.getMessage());
         }
     }
+    
     @Override
-    public FavoriteDTO insert(FavoriteDTO dto, String userId) {
+    public ResponseDTO<Object> insert(FavoriteDTO dto, String userId) {
+        ResponseDTO<Object> res = new ResponseDTO<>();
         try{
             final FavoriteEntity favoriteEntity = FavoriteDTO.toFavoriteEntity(dto, userId);
-            final UserEntity userEntity = UserEntity.builder().id(userId).build();
-
-            Optional<FavoriteEntity> existingEntity = favoriteRepository.findByUserEntityAndNameAndAddr(userEntity, dto.getName(), dto.getAddr());
-
-            if (existingEntity.isPresent()) {
-                throw new RuntimeException("이미 즐겨찾기에 추가한 시설입니다.");
-            }
             FavoriteEntity savedEntity = favoriteRepository.save(favoriteEntity);
             FavoriteDTO favoriteDTO = FavoriteDTO.toFavoriteDTO(savedEntity);
-            return favoriteDTO;
+            res.setObject(favoriteDTO);
+            return res;
         }catch(Exception e){
-            throw new RuntimeException(e.getMessage());
+            res.setError(e.getMessage());
+            return res;
         }
     }
     @Override
