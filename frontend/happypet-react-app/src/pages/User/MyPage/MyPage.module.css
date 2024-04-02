@@ -117,6 +117,7 @@
 .table{
   display: flex;
   justify-content: center;
+  margin-bottom: 15px;
 }
 
 .thead{
@@ -153,7 +154,7 @@
 
 .favoriteTbody p{
   color: black;
-  text-align: center;
+  justify-content: center;
 }
 
 .favoriteTbody p:nth-child(1), 
