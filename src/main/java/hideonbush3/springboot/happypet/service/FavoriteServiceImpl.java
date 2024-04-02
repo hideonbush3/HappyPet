@@ -60,21 +60,6 @@ public class FavoriteServiceImpl implements FavoriteService{
             return res;
         }
     }
-    @Override
-    public List<FavoriteDTO> delete(FavoriteDTO dto, String userId) {
-        try {
-            FavoriteEntity favoriteEntity = FavoriteDTO.toFavoriteEntity(dto, userId);
-            favoriteRepository.delete(favoriteEntity);
-            
-            UserEntity userEntity = UserEntity.builder().id(userId).build();
-            List<FavoriteEntity> entities = favoriteRepository.findAllByUserEntity(userEntity);
-            List<FavoriteDTO> dtos = entities.stream().map(FavoriteDTO::toFavoriteDTO).collect(Collectors.toList());
-
-            return dtos;
-        } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
-        }
-    }
 
     @Override
     public ResponseDTO<?> deleteInModal(FavoriteDTO dto, String userId) {

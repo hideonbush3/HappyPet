@@ -51,18 +51,6 @@ public class FavoriteController {
             return ResponseEntity.ok().body(res);
     }
 
-    @DeleteMapping
-    public ResponseEntity<?> remove(@RequestBody FavoriteDTO dto, @AuthenticationPrincipal String userId){
-        try {
-            List<FavoriteDTO> dtos = favoriteService.delete(dto, userId);
-            ResponseDTO<FavoriteDTO> res = ResponseDTO.<FavoriteDTO>builder().data(dtos).build();
-            return ResponseEntity.ok().body(res);
-        } catch (Exception e) {
-            ResponseDTO<Object> res = ResponseDTO.builder().error(e.getMessage()).build();
-            return ResponseEntity.badRequest().body(res);
-        }
-    }
-
     @DeleteMapping("/removeinmodal")
     public ResponseEntity<?> removeInModal(@AuthenticationPrincipal String userId, @RequestBody FavoriteDTO dto){
         ResponseDTO<?> res = favoriteService.deleteInModal(dto, userId);
