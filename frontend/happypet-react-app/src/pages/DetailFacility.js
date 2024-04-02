@@ -4,8 +4,9 @@ import { useLocation } from "react-router-dom";
 import {Map, MapMarker} from "react-kakao-maps-sdk";
 import style from './DetailFacility.module.css';
 import {call} from '../service/ApiService';
-import { AiOutlineStar, AiFillStar } from "react-icons/ai";
 import ToastMessage from '../component/ToastMessage';
+import { BsSuitHeart, BsSuitHeartFill } from "react-icons/bs";
+
 
 function DetailFacility(){
     const location = useLocation();
@@ -21,26 +22,39 @@ function DetailFacility(){
             setShowToastMessage(false);
         }, 500)
     }
+
     const clickDeleteFavorite = () => {
+        console.log(addedToFavorites);
         call('/favorite/removeinmodal', 'DELETE', addedToFavorites)
-        .catch(error => {
-          setAddedToFavorites(null);
-          setProcess("즐겨찾기 삭제")
-          callToastMessage();
-        })
+        .then((res) => {
+          if(res.message === '삭제성공'){
+            setAddedToFavorites(null);
+            setProcess('즐겨찾기 삭제 완료!');
+            callToastMessage();
+          }else if(res.error !== null){
+            alert('알수없는 에러가 발생했습니다.\n재시도하거나 관리자에게 문의하세요.');
+            return;
+          }
+        });
       }
 
     const clickAddFavorite = () => {
-    call('/favorite', 'POST', f)
-    .then((res) => {
-        if(res.error === undefined){
-        setAddedToFavorites(res);
-        setProcess("즐겨찾기 추가")
-        callToastMessage();
-        }else{
-        alert("이미 즐겨찾기 추가한 시설입니다.")
+      const token = localStorage.getItem('happypetToken');
+      if(token === 'null'){
+        alert('즐겨찾기 추가를 하려면 로그인하셔야 합니다.');
+        return;
+      }
+      call('/favorite', 'POST', f)
+      .then((res) => {
+        if(res.object !== null){
+          setAddedToFavorites(res.object);
+          setProcess("즐겨찾기 추가 완료!")
+          callToastMessage();
+        }else if(res.error !== null){
+          alert('알수없는 에러가 발생했습니다.\n재시도하거나 관리자에게 문의하세요.');
+          return;
         }
-    })
+      })
     }
 
     useEffect(() => {
@@ -66,8 +80,8 @@ function DetailFacility(){
                 <Card.Header className={`${style.detailFacilityTitle} text-center`}>
                     {f.name}
                     {addedToFavorites !== null
-                  ? <AiFillStar onClick={clickDeleteFavorite} className={style.star} size="30px"color="yellow"/> 
-                  : <AiOutlineStar onClick={clickAddFavorite} className={style.star} size="30px"color="yellow"/>}
+                  ? <BsSuitHeartFill onClick={clickDeleteFavorite} className={style.star} size="30px"color="#fc1232"/> 
+                  : <BsSuitHeart onClick={clickAddFavorite} className={style.star} size="30px"color="black"/>}
                 </Card.Header>
                 <Card.Body className="text-muted">
                     <Map
