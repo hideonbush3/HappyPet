@@ -1,9 +1,9 @@
 import { Col, Container, Nav, Navbar, Row } from "react-bootstrap";
 import style from './Header.module.css';
 function Header(){
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("happypetToken");
     const signOutEvent = () => {
-        localStorage.setItem("token", null);
+        localStorage.setItem("happypetToken", null);
     }
 
     return(

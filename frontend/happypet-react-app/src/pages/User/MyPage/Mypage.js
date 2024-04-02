@@ -102,7 +102,7 @@ function Mypage(props) {
                             alert("회원탈퇴가 완료됐습니다.");
                             setShowReAuthModal(false);
                             window.location.href = '/';
-                            localStorage.setItem("token", null);
+                            localStorage.setItem("happypetToken", null);
                         }else{
                             alert('회원님의 데이터를 삭제하는도중에 알수없는 에러가 발생했습니다.\n재시도하거나 관리자에게 문의하세요.')
                             return;

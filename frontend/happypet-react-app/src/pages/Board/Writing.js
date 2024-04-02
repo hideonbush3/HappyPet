@@ -101,7 +101,7 @@ export default function Writing(){
             method: 'POST',
             body: formData,
             headers: {
-                "Authorization": "Bearer " + localStorage.getItem('token'),
+                "Authorization": "Bearer " + localStorage.getItem('happypetToken'),
             }
         };
 
@@ -119,7 +119,7 @@ export default function Writing(){
                 navigate('/board/view', {state: {post: res}});
             }else if(res.error === '존재하지 않는 유저'){
                 alert('세션이 만료됐습니다.\n재로그인하세요.');
-                localStorage.setItem('token', null);
+                localStorage.setItem('happypetToken', null);
                 window.location.href = '/user/login';
             }else{
                 alert('페이지를 새로고침한 후 재작성하세요.\n그래도 작성이 안된다면 관리자에게 문의하세요.')

@@ -6,10 +6,11 @@ export default function BoardList(props){
     const items = props.items;
 
     const newPostClick = () => {
-        if(localStorage.getItem('token') !== 'null'){
+        if(localStorage.getItem('happypetToken') !== 'null'){
             window.location.href = '/board/write';
         }else{
-            window.location.href = '/user/login';
+            alert('로그인 하셔야 합니다.');
+            return;
         }
     };
 

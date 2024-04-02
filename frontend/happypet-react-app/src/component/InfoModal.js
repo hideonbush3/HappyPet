@@ -1,11 +1,12 @@
 import { Col, Container, Modal, Row } from "react-bootstrap";
 import style from './InfoModal.module.css';
 import { BsGeoAlt, BsHouse, BsTelephone } from "react-icons/bs";
-import { AiOutlineStar, AiFillStar } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
 import { call } from "../service/ApiService";
 import { useState } from "react";
 import ToastMessage from "./ToastMessage";
+import { BsSuitHeart, BsSuitHeartFill } from "react-icons/bs";
+
 
 function InfoModal(props){
     const {facility} = props;
@@ -31,6 +32,11 @@ function InfoModal(props){
   }
 
     const clickAddFavorite = () => {
+      const token = localStorage.getItem('happypetToken');
+      if(token === null){
+        alert('즐겨찾기 추가를 하려면 로그인하셔야 합니다.');
+        return;
+      }
       call('/favorite', 'POST', facility)
       .then((res) => {
         if(res.error === undefined){
@@ -87,8 +93,8 @@ function InfoModal(props){
           <div className={`${style.footer} mb-2`}>
                 <div className={style.starContainer}>
                   {addedToFavorites !== null
-                  ? <AiFillStar onClick={clickDeleteFavorite} className={style.star} size="40px"color="yellow"/> 
-                  : <AiOutlineStar onClick={clickAddFavorite} className={style.star} size="40px"color="yellow"/>}
+                  ? <BsSuitHeartFill onClick={clickDeleteFavorite} className={style.star} size="40px"color="#fc1232"/> 
+                  : <BsSuitHeart onClick={clickAddFavorite} className={style.star} size="40px"color="black"/>}
                   </div>
                 <div className={style.detailBtnContainer}>
                   <button onClick={detailFacilityBtnEventHandler}>상세보기</button>

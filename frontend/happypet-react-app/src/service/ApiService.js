@@ -5,7 +5,7 @@ export function call(api, method, request){
         "Content-Type": "application/json",
     });
 
-    const accessToken = localStorage.getItem("token");
+    const accessToken = localStorage.getItem("happypetToken");
     if(accessToken && accessToken!==null){
         headers.append("Authorization", "Bearer " + accessToken);
     }
@@ -37,7 +37,7 @@ export function signin(userDTO){
     return call("/user/signin", "POST", userDTO)
         .then((res) => {
             if(res.object !== null){
-                localStorage.setItem("token", res.object.token);
+                localStorage.setItem('happypetToken', res.object.token);
                 window.location.href = "/"
             }else if(res.message === '아이디불일치'){
                 alert('해당 아이디와 일치하는 회원은 없습니다.');
@@ -54,7 +54,7 @@ export function signin(userDTO){
 
 // 로그아웃
 export function signout(){
-    localStorage.setItem("token", null);
+    localStorage.setItem("happypetToken", null);
     window.location.href = "/login";
 }
 
