@@ -35,14 +35,17 @@ public class FavoriteServiceImpl implements FavoriteService{
         }
     }
     @Override
-    public List<FavoriteDTO> select(String userId) {
+    public ResponseDTO<FavoriteDTO> select(String userId) {
+        ResponseDTO<FavoriteDTO> res = new ResponseDTO<>();
         try {
             UserEntity userEntity = UserEntity.builder().id(userId).build();
             List<FavoriteEntity> entities = favoriteRepository.findAllByUserEntity(userEntity);
             List<FavoriteDTO> dtos = entities.stream().map(FavoriteDTO::toFavoriteDTO).collect(Collectors.toList());
-            return dtos;       
+            res.setData(dtos);
+            return res;       
         } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
+            res.setError(e.getMessage());
+            return res;
         }
     }
 

@@ -33,16 +33,12 @@ public class FavoriteController {
         }
         
     }
+
+    // mypage에서 내 즐겨찾기 목록 불러오기
     @GetMapping
     public ResponseEntity<?> retrieve(@AuthenticationPrincipal String userId){
-        try {
-            List<FavoriteDTO> dtos = favoriteService.select(userId);
-            ResponseDTO<FavoriteDTO> res = ResponseDTO.<FavoriteDTO>builder().data(dtos).build();
-            return ResponseEntity.ok().body(res);
-        } catch (Exception e) {
-            ResponseDTO<Object> res = ResponseDTO.builder().error(e.getMessage()).build();
-            return ResponseEntity.badRequest().body(res);
-        }
+        ResponseDTO<FavoriteDTO> res = favoriteService.select(userId);
+        return ResponseEntity.ok().body(res);
     }
 
     @PostMapping
