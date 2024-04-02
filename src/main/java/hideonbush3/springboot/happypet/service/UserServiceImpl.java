@@ -96,9 +96,16 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public UserDTO select(String userId) {
-        UserEntity sessionUser = userRepository.findById(userId).get();
-        return UserDTO.convertToDto(sessionUser);
+    public ResponseDTO<UserDTO> select(String userId) {
+        ResponseDTO<UserDTO> res = new ResponseDTO<>();
+        try {
+            UserEntity sessionUser = userRepository.findById(userId).get();
+            res.setObject(UserDTO.convertToDto(sessionUser));
+            return res;
+        } catch (Exception e) {
+            res.setError(e.getMessage());
+            return res;
+        }
     }
 
     @Transactional

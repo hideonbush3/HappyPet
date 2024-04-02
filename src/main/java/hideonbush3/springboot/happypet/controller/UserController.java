@@ -49,14 +49,8 @@ public class UserController {
     // 로그인한 유저 정보
     @GetMapping
     public ResponseEntity<?> read(@AuthenticationPrincipal String userId){
-        try {
-            UserDTO res = ussrv.select(userId);
-            return ResponseEntity.ok().body(res); 
-        } catch (Exception e) {
-            String error = e.getMessage();
-            ResponseDTO<Object> res = ResponseDTO.builder().error(error).build();
-            return ResponseEntity.badRequest().body(res);
-        }
+        ResponseDTO<UserDTO> res = ussrv.select(userId);
+        return ResponseEntity.ok().body(res);
     }
 
     // 내 정보 수정, 탈퇴 시 재인증
