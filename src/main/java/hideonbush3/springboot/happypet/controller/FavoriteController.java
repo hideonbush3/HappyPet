@@ -64,11 +64,8 @@ public class FavoriteController {
     }
 
     @DeleteMapping("/removeinmodal")
-    public void removeInModal(@AuthenticationPrincipal String userId, @RequestBody FavoriteDTO dto){
-        try {
-            favoriteService.deleteInModal(dto, userId);
-        } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
-        }
+    public ResponseEntity<?> removeInModal(@AuthenticationPrincipal String userId, @RequestBody FavoriteDTO dto){
+        ResponseDTO<?> res = favoriteService.deleteInModal(dto, userId);
+        return ResponseEntity.ok().body(res);
     }
 }

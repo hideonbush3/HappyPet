@@ -45,7 +45,7 @@ public class FavoriteServiceImpl implements FavoriteService{
             throw new RuntimeException(e.getMessage());
         }
     }
-    
+
     @Override
     public ResponseDTO<Object> insert(FavoriteDTO dto, String userId) {
         ResponseDTO<Object> res = new ResponseDTO<>();
@@ -77,12 +77,16 @@ public class FavoriteServiceImpl implements FavoriteService{
     }
 
     @Override
-    public void deleteInModal(FavoriteDTO dto, String userId) {
+    public ResponseDTO<?> deleteInModal(FavoriteDTO dto, String userId) {
+        ResponseDTO<?> res = new ResponseDTO<>();
         try{
             FavoriteEntity favoriteEntity = FavoriteDTO.toFavoriteEntity(dto, userId);
             favoriteRepository.delete(favoriteEntity);
+            res.setMessage("삭제성공");
+            return res;
         }catch(Exception e){
-            throw new RuntimeException(e.getMessage());
+            res.setError(e.getMessage());
+            return res;
         }
     }
 
