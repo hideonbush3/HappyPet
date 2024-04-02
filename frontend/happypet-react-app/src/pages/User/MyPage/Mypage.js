@@ -39,7 +39,12 @@ function Mypage(props) {
     useEffect(() => {
         call('/favorite', 'GET', null)
         .then((res) => {
-            setFavoriteList(res.data);
+            if(res.data !== null){
+                setFavoriteList(res.data);
+            }else if(res.error !== null){
+                alert('즐겨찾기 목록을 불러오는 도중 알수없는 에러가 발생했습니다.\n관리자에게 문의하세요.');
+                return;
+            }
         })
     }, [addedToFavorites])
 
