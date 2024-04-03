@@ -40,7 +40,9 @@ export default function FindId(){
                         return;
                     }
                 })
-                
+            }else{
+                alert('알 수 없는 에러가 발생했습니다.\n재전송 하시거나 관리자에게 문의바랍니다.');
+                return;
             }
         })
         
