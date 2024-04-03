@@ -55,9 +55,15 @@ function Mypage(props) {
 
     // 게시글
     useEffect(() => {
-        call('/post/mypost', 'GET', null)
+        call('/post/my-post', 'GET', null)
         .then((res) => {
-            setPostList(res.data)
+            if(res.error !== null){
+                alert('내가 작성한 게시들 데이터들을 불러오다가\n알 수 없는 에러가 발생했습니다.\n관리자에게 문의하세요');
+                return;
+            }
+            else{
+                setPostList(res.data)
+            }
         })
     }, [])
 
