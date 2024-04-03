@@ -11,7 +11,7 @@ public interface UserService {
     ResponseDTO<UserDTO> select(String userId);
     ResponseDTO<?> delete(String userId);
     ResponseDTO<Object> isExist(UserDTO dto, PasswordEncoder passwordEncoder, String userId, String process);
-    UserDTO update(UserDTO userDTO, PasswordEncoder passwordEncoder);
+    ResponseDTO<UserDTO> update(UserDTO userDTO, String userId);
     ResponseDTO<Object> isExistByEmail(String email);
     ResponseDTO<Object> isExistByUserId(String userId);
 }

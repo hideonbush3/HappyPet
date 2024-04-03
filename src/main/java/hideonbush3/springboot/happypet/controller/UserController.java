@@ -70,16 +70,11 @@ public class UserController {
     }
     
     @PutMapping("/modify")
-    public ResponseEntity<?> modify(@RequestBody UserDTO userDTO) {
-        try {
-            UserDTO updatedUserInfo = ussrv.update(userDTO, passwordEncoder);
-            return ResponseEntity.ok().body(updatedUserInfo);
-        } catch (Exception e) {
-            ResponseDTO<Object> res = ResponseDTO.builder().error(e.getMessage()).build();
-            return ResponseEntity.badRequest().body(res);
-        }        
+    public ResponseEntity<?> modify(@RequestBody UserDTO userDTO, @AuthenticationPrincipal String userId) {
+        ResponseDTO<UserDTO> res = ussrv.update(userDTO, userId);
+        return ResponseEntity.ok().body(res);
     }
-
+    
     // 이메일 중복여부
     @GetMapping("/checksignup/email")
     public ResponseEntity<?> readByEmail(@RequestParam String email){

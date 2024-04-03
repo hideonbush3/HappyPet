@@ -146,32 +146,34 @@ public class UserServiceImpl implements UserService{
 
     // 내 정보 수정
     @Override
-    public UserDTO update(UserDTO userDTO, PasswordEncoder passwordEncoder) {
-        String[] usernames = userDTO.getUsername().split("/");
-        String newUsername = usernames[1];
-        UserEntity existingUser = userRepository.findByUsername(usernames[0]);
-
-        if(!usernames[0].equals(newUsername) && userRepository.existsByUsername(newUsername)){
-            throw new RuntimeException("아이디 중복");
+    public ResponseDTO<UserDTO> update(UserDTO userDTO, String userId) {
+        ResponseDTO<UserDTO> res = new ResponseDTO<>();
+        try {
+            String newLoginId = userDTO.getUsername();
+            UserEntity existingUser = userRepository.findById(userId).get();
+            String encryptedPassword;
+    
+            if(!existingUser.getUsername().equals(newLoginId) && userRepository.existsByUsername(newLoginId)){
+                res.setMessage("아이디중복");
+            }
+            else if(!existingUser.getNickname().equals(userDTO.getNickname()) && userRepository.existsByNickname(userDTO.getNickname())){
+                res.setMessage("닉네임중복");
+            }
+            else{
+                encryptedPassword = passwordEncoder.encode(userDTO.getPassword());
+                existingUser.setUsername(newLoginId);
+                existingUser.setPassword(encryptedPassword);
+                existingUser.setNickname(userDTO.getNickname());
+                existingUser.setEmail(userDTO.getEmail());
+        
+                UserEntity updatedUser = userRepository.save(existingUser);
+                res.setObject(UserDTO.convertToDto(updatedUser));
+            }
+            return res;
+        } catch (Exception e) {
+            res.setError(e.getMessage());
+            return res;
         }
-        if(!existingUser.getNickname().equals(userDTO.getNickname()) && userRepository.existsByNickname(userDTO.getNickname())){
-            throw new RuntimeException("닉네임 중복");
-        }
-
-        String encryptedPassword;
-        if(!userDTO.getPassword().equals(existingUser.getPassword())){
-            encryptedPassword = passwordEncoder.encode(userDTO.getPassword());
-        }else{
-            encryptedPassword = userDTO.getPassword();
-        }
-
-        existingUser.setUsername(newUsername);
-        existingUser.setPassword(encryptedPassword);
-        existingUser.setNickname(userDTO.getNickname());
-        existingUser.setEmail(userDTO.getEmail());
-
-        UserEntity updatedUserInfo = userRepository.save(existingUser);
-        return UserDTO.convertToDto(updatedUserInfo);
     }
     
     @Override
