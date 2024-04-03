@@ -15,5 +15,5 @@ public interface PostService {
 
     public PostDTO selectOne(Long id);
 
-    public List<PostDTO> selectMyPost(String userId);
+    public ResponseDTO<PostDTO> selectMyPost(String userId);
 }

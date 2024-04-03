@@ -188,14 +188,17 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    public List<PostDTO> selectMyPost(String userId) {
+    public ResponseDTO<PostDTO> selectMyPost(String userId) {
+        ResponseDTO<PostDTO> res = new ResponseDTO<>();
         try {
             UserEntity userEntity = UserEntity.builder().id(userId).build();
             List<PostEntity> entities = postRepository.findAllByUserEntity(userEntity);
             List<PostDTO> dtos = entities.stream().map(PostDTO::convertToDto).collect(Collectors.toList());
-            return dtos;
+            res.setData(dtos);
+            return res;
         } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
+            res.setError(e.getMessage());
+            return res;
         }
     }
 

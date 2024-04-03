@@ -89,15 +89,9 @@ public class PostController {
         }
     }
 
-    @GetMapping("/mypost")
+    @GetMapping("/my-post")
     public ResponseEntity<?> retrieveMyPost(@AuthenticationPrincipal String userId){
-        try {
-            List<PostDTO> dtos = postService.selectMyPost(userId);
-            ResponseDTO<PostDTO> res = ResponseDTO.<PostDTO>builder().data(dtos).build();
-            return ResponseEntity.ok().body(res);
-        } catch (Exception e) {
-            ResponseDTO<Object> res = ResponseDTO.builder().error(e.getMessage()).build();
-            return ResponseEntity.badRequest().body(res);
-        }
+        ResponseDTO<PostDTO> res = postService.selectMyPost(userId);
+        return ResponseEntity.ok().body(res);
     }
 }
