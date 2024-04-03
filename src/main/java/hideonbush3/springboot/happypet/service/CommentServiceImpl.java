@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import hideonbush3.springboot.happypet.dto.CommentDTO;
+import hideonbush3.springboot.happypet.dto.ResponseDTO;
 import hideonbush3.springboot.happypet.model.CommentEntity;
 import hideonbush3.springboot.happypet.model.PostEntity;
 import hideonbush3.springboot.happypet.model.UserEntity;
@@ -28,28 +29,35 @@ public class CommentServiceImpl implements CommentService{
     private PostRepository postRepository;
     
     @Override
-    public List<CommentDTO> insert(CommentDTO dto, String userId) {
+    public ResponseDTO<CommentDTO> insert(CommentDTO dto, String userId) {
+        ResponseDTO<CommentDTO> res = new ResponseDTO<>();
         try {
             LocalDateTime regdate = LocalDateTime.now();
-            Optional<PostEntity> optionalPostEntity = postRepository.findById(dto.getPostId());
-            PostEntity postEntity = optionalPostEntity.orElseThrow(() -> new RuntimeException("게시물이 존재하지 않습니다"));
-
-            Optional<UserEntity> optionalUserEntity = userRepository.findById(userId);
-            UserEntity userEntity = optionalUserEntity.orElseThrow(() -> new RuntimeException("유저가 존재하지 않습니다"));
-            
-            CommentEntity commentForSave = CommentEntity.builder()
-                .content(dto.getContent())
-                .regdate(regdate)
-                .userEntity(userEntity)
-                .postEntity(postEntity)
-                .build();
-            commentRepository.save(commentForSave);
- 
-            List<CommentEntity> commentList = commentRepository.findAllByPostEntity(postEntity);
-
-            return commentList.stream().map(CommentDTO::convertToDto).collect(Collectors.toList());
+            Optional<PostEntity> optionalPost = postRepository.findById(dto.getPostId());
+            if(!optionalPost.isPresent()){
+                res.setMessage("게시글이존재하지않음");
+            }
+            else{
+                UserEntity user = userRepository.findById(userId).get();
+                PostEntity post = optionalPost.get();
+                
+                CommentEntity commentForSave = CommentEntity.builder()
+                    .content(dto.getContent())
+                    .regdate(regdate)
+                    .userEntity(user)
+                    .postEntity(post)
+                    .build();
+                commentRepository.save(commentForSave);
+     
+                List<CommentEntity> commentList = commentRepository.findAllByPostEntity(post);
+    
+                List<CommentDTO> commentDtoList = commentList.stream().map(CommentDTO::convertToDto).collect(Collectors.toList());
+                res.setData(commentDtoList);
+            }
+            return res;
         } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
+            res.setError(e.getMessage());
+            return res;
         }
     }
 

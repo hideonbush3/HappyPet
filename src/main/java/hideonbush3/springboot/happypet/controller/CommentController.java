@@ -24,14 +24,8 @@ public class CommentController {
     // Configuration of RequestBody -> String content, Long postId
     @PostMapping("/write")
     public ResponseEntity<?> create(@RequestBody CommentDTO dto, @AuthenticationPrincipal String userId){
-        try {
-            List<CommentDTO> dtos = commentService.insert(dto, userId);
-            ResponseDTO<CommentDTO> res = ResponseDTO.<CommentDTO>builder().data(dtos).build();
-            return ResponseEntity.ok().body(res);
-        } catch (Exception e) {
-            ResponseDTO<Object> res = ResponseDTO.builder().error(e.getMessage()).build();
-            return ResponseEntity.badRequest().body(res);
-        }
+        ResponseDTO<CommentDTO> res = commentService.insert(dto, userId);
+        return ResponseEntity.ok().body(res);
     }
 
     // Configuration of RequestBody -> Long id, Long postId
