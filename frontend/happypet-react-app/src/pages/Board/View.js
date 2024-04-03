@@ -63,10 +63,15 @@ export default function View(){
         if(window.confirm("삭제하시겠습니까?")){
             call(`/comment/remove`, 'DELETE', comment)
             .then((res) => {
-                let newPost = post;
-                newPost.commentList = res.data;
-                setCommentList(res.data);
-                navigate('/board/view', {state: {post: newPost}}, {replace: true});
+                if(res.error !== null){
+                    alert('알수없는 에러가 발생했습니다.\n관리자에게 문의하세요.');
+                    return;
+                }else{
+                    let newPost = post;
+                    newPost.commentList = res.data;
+                    setCommentList(res.data);
+                    navigate('/board/view', {state: {post: newPost}}, {replace: true});
+                }
             })
         }else return;
     }
