@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import hideonbush3.springboot.happypet.dto.ReplyDTO;
@@ -24,15 +25,13 @@ public class ReplyController {
 
     // Configuration of RequestBody -> String centent, Long commentId
     @PostMapping("/write")
-    public ResponseEntity<?> create(@RequestBody ReplyDTO dto, @AuthenticationPrincipal String userId){
-        try {
-            Map<Long, List<ReplyDTO>> replyList = replyService.insert(dto, userId);
-            return ResponseEntity.ok().body(replyList);
-        } catch (Exception e) {
-            ResponseDTO<Object> res = ResponseDTO.builder().error(e.getMessage()).build();
-            return ResponseEntity.badRequest().body(res);
+    public ResponseEntity<?> create(
+        @RequestBody ReplyDTO dto, 
+        @AuthenticationPrincipal String userId,
+        @RequestParam Long postId){
+            ResponseDTO<ReplyDTO> res = replyService.insert(dto, userId, postId);
+            return ResponseEntity.ok().body(res);
         }
-    }
 
     // Configuration of RequestBody -> Long id, Long commentId
     @DeleteMapping("/remove")

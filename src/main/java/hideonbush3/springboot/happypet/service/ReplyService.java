@@ -4,8 +4,9 @@ import java.util.List;
 import java.util.Map;
 
 import hideonbush3.springboot.happypet.dto.ReplyDTO;
+import hideonbush3.springboot.happypet.dto.ResponseDTO;
 
 public interface ReplyService {
-    public Map<Long, List<ReplyDTO>> insert(ReplyDTO dto, String userId);
+    public ResponseDTO<ReplyDTO> insert(ReplyDTO dto, String userId, Long postId);
     public Map<Long, List<ReplyDTO>> delete(ReplyDTO dto);
 }
