@@ -23,10 +23,19 @@ export default function Post(props){
         content === "" ? alert("내용을 입력하세요") : 
         call('/comment/write', 'POST', {content: content, postId: props.post.id})
         .then((res) => {
-            props.setCommentList(res.data);
-            setContent("");
-            post.commentList = res.data;
-            navigate('/board/view', {state: {post: post}}, {replace: true});
+            if(res.error !== null){
+                alert('알수없는 에러가 발생했습니다.\n관리자에게 문의하세요.');
+                return;
+            }
+            else if(res.message === '게시글이존재하지않음'){
+                alert('게시글이 더이상 존재하지 않습니다.');
+                window.location.href = '/board';
+            }else{
+                props.setCommentList(res.data);
+                setContent("");
+                post.commentList = res.data;
+                navigate('/board/view', {state: {post: post}}, {replace: true});
+            }
         })
     }
     return (
