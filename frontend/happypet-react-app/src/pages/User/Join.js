@@ -16,7 +16,6 @@ function Join(props){
     const [email1, setEmail1] = useState('');
     const [email2, setEmail2] = useState('');
     
-    const API = '/auth-code';
     const [authCode, setAuthCode] = useState('');
     const [authCodeCreatedDate, setAuthCodeCreatedDate] = useState('');
     const [showAuthCodeInput, setShowAuthCodeInput] = useState(false);
@@ -157,7 +156,7 @@ function Join(props){
 
             setShowToastMessage(true);
             const params = authCodeBtnText === '이메일 인증코드 전송' ? '' : `?createdDate=${authCodeCreatedDate}`;
-            call(`${API}/create${params}`, 'POST', {
+            call(`/auth-code/create${params}`, 'POST', {
                 email: email,
                 title: 'HappyPet 이메일 인증코드',
                 body: '인증코드는 %s 입니다.\n회원가입으로 돌아가세요.'
@@ -179,7 +178,7 @@ function Join(props){
 
     const verifyAuthCode = () => {
         const email = email1 + '@' + email2;
-        call(API + '/check', 'DELETE', {
+        call('/auth-code/check', 'DELETE', {
             email: email,
             authCode: authCode})
         .then((res) => {
