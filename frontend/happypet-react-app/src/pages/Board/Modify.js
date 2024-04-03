@@ -127,29 +127,29 @@ export default function Modify(){
             }
         };
 
-        return fetch(options.url, options).then((res) => {
+        return fetch(options.url, options)
+        .then((res) => {
             if(res.status === 200) {
                 return res.json();
             }else if(res.status === 403){
                 window.location.href = "/user/login";
+            }else if(res.status === 415){
+                alert('이미지 파일만 첨부 가능합니다.');
+                return;
             }else{
-                return res.json();
+                alert('알 수 없는 에러가 발생했습니다.\n관리자에게 문의하세요');
+                return;
             }
         })
         .then((res) => {
-            if(res.error === undefined){
-                navigate('/board/view', {state: {post: res}});
-            }else if(res.error === '존재하지 않는 유저'){
-                alert('세션이 만료됐습니다.\n재로그인하세요.');
-                localStorage.setItem('happypetToken', null);
-                window.location.href = '/user/login';
-            }else{
-                alert('페이지를 새로고침한 후 재작성하세요.\n그래도 작성이 안된다면 관리자에게 문의하세요.')
+            if(res.error !== null){
+                alert('알 수 없는 에러가 발생했습니다.\n관리자에게 문의하세요.');
+                return;
+            }
+            else{
+                navigate('/board/view', {state: {post: res.object}});
             }
           })
-        .catch(error => {
-            throw error;
-        })
     };
   
     return(
