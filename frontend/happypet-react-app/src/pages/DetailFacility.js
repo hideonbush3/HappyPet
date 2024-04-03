@@ -24,7 +24,6 @@ function DetailFacility(){
     }
 
     const clickDeleteFavorite = () => {
-        console.log(addedToFavorites);
         call('/favorite/removeinmodal', 'DELETE', addedToFavorites)
         .then((res) => {
           if(res.message === '삭제성공'){
