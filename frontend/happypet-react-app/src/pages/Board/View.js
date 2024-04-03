@@ -130,17 +130,23 @@ export default function View(){
         if(window.confirm("삭제하시겠습니까?")){
             call('/reply/remove', 'DELETE', {id: reply.id, commentId: key})
             .then((res) => {
-                const commentId = parseInt(Object.keys(res)[0]);
-                const newReplyList = res[commentId];
-                const newCommentList = [...commentList];
-                newCommentList.map((comment) => {
-                    if(comment.id === commentId){
-                        comment.replyList = newReplyList;
-                    }
-                })
-                setCommentList(newCommentList);
-                post.commentList = newCommentList;
-                navigate('/board/view', {state: {post: post}}, {replace: true});
+                if(res.error !== null){
+                    alert('알수없는 에러가 발생했습니다.\n관리자에게 문의하세요.');
+                    return;
+                }
+                else{
+                    const commentId = parseInt(Object.keys(res.mapData)[0]);
+                    const newReplyList = res.mapData[commentId];
+                    const newCommentList = [...commentList];
+                    newCommentList.map((comment) => {
+                        if(comment.id === commentId){
+                            comment.replyList = newReplyList;
+                        }
+                    })
+                    setCommentList(newCommentList);
+                    post.commentList = newCommentList;
+                    navigate('/board/view', {state: {post: post}}, {replace: true});
+                }
             })
         }else return;
     }
