@@ -63,12 +63,8 @@ public class PostController {
         @RequestParam(value="images", required = false) List<MultipartFile> images,
         @RequestParam(value="urlAndName", required = false) String urlAndName,
         @RequestParam(value="imagesToDelete", required = false) String[] imagesToDelete){
-        try {
-            return ResponseEntity.ok().body(postService.update(userId, id, title, content, images, urlAndName, imagesToDelete));
-        } catch (Exception e) {
-            ResponseDTO<Object> res = ResponseDTO.builder().error(e.getMessage()).build();
-            return ResponseEntity.badRequest().body(res);
-        }
+            ResponseDTO<PostDTO> res = postService.update(userId, id, title, content, images, urlAndName, imagesToDelete);
+            return ResponseEntity.ok().body(res);
     }
 
     // Configuration of request body -> id

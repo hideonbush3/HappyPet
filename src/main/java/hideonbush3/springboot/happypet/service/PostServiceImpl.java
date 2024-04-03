@@ -23,6 +23,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import hideonbush3.springboot.happypet.dto.PostDTO;
+import hideonbush3.springboot.happypet.dto.ResponseDTO;
 import hideonbush3.springboot.happypet.model.ImageEntity;
 import hideonbush3.springboot.happypet.model.PostEntity;
 import hideonbush3.springboot.happypet.model.UserEntity;
@@ -133,36 +134,36 @@ public class PostServiceImpl implements PostService{
     
     @Override
     @Transactional
-    public PostDTO update(
+    public ResponseDTO<PostDTO> update(
         String userId, Long id,
         String title, String content, 
         List<MultipartFile> images, String urlAndName, 
         String[] imagesToDelete) {
-        userRepository.findById(userId).orElseThrow(() -> new RuntimeException("존재하지 않는 유저"));
-        
-        try{
-            Optional<PostEntity> origin = postRepository.findById(id);
+            ResponseDTO<PostDTO> res = new ResponseDTO<>();        
+            try{
+                Optional<PostEntity> origin = postRepository.findById(id);
 
-            origin.ifPresent(post -> {
-                post.setTitle(title);
-                post.setContent(content);
+                origin.ifPresent(post -> {
+                    post.setTitle(title);
+                    post.setContent(content);
 
-                postRepository.save(post);
-            });
-            if (imagesToDelete.length > 0) {
-                Arrays.stream(imagesToDelete)
-                      .peek(imageRepository::deleteByName)
-                      .map(imageName -> new File(imageDir + imageName))
-                      .forEach(File::delete);
+                    postRepository.save(post);
+                });
+                if (imagesToDelete.length > 0) {
+                    Arrays.stream(imagesToDelete)
+                        .peek(imageRepository::deleteByName)
+                        .map(imageName -> new File(imageDir + imageName))
+                        .forEach(File::delete);
+                }
+
+                PostEntity updatedEntity = postRepository.findById(id).get();
+                res.setObject(PostDTO.convertToDto(updatedEntity));
+                return res;
+            }catch(Exception e){
+                res.setError(e.getMessage());
+                return res;
             }
-
-            PostEntity updatedEntity = postRepository.findById(id).get();
-            return PostDTO.convertToDto(updatedEntity);
-        }catch(Exception e){
-            throw new RuntimeException(e.getMessage());
         }
-
-    }
 
     @Override
     public boolean delete(Long id) {
