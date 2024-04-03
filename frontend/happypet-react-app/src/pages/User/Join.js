@@ -261,15 +261,30 @@ function Join(props){
                 else window.location.href = "/user/login";
             });
         }else{
+            const token = localStorage.getItem('happypetToken');
+            if(token == null){
+                alert('세션이 만료됐습니다.\n다시 로그인하세요.');
+                window.location.href='/user/login';
+            }
             call('/user/modify', 'PUT', {
                 username: username,
                 password: password,
                 nickname: nickname,
                 email: email1 + '@' + email2
-            }).then((res) => {
-                if(res !== undefined && res.error === '아이디 중복') alert("이미 존재하는 아이디입니다");
-                else if(res !== undefined && res.error === '닉네임 중복') alert("이미 존재하는 닉네임입니다");
-                else {alert("회원님의 정보를 수정했습니다."); window.location.href = '/user/mypage/myinfo'}
+            })
+            .then((res) => {
+                if(res.message === '아이디중복'){
+                    alert("이미 존재하는 아이디입니다.");
+                    return;
+                }
+                else if(res.message === '닉네임중복'){
+                    alert("이미 존재하는 닉네임입니다.");
+                    return;
+                }
+                else{
+                    alert("회원님의 정보를 수정했습니다.");
+                    window.location.href = '/user/mypage/myinfo';
+                }
             });
         }
     }
