@@ -89,21 +89,34 @@ export default function View(){
 
     const writeReplyHandler = () => {
         replyContent === "" ? alert("내용을 입력하세요") : 
-        call('/reply/write', 'POST', {content: replyContent, commentId: selectedCommentId})
+        call(`/reply/write?postId=${post.id}`, 'POST', {content: replyContent, commentId: selectedCommentId})
         .then((res) => {
-            const commentId = parseInt(Object.keys(res)[0]);
-            const newReplyList = res[commentId];
-            let newCommentList = [...commentList];
-
-            newCommentList.map((comment) => {
-                if(comment.id === commentId){
-                    comment.replyList = newReplyList;
-                }
-            })
-            setCommentList(newCommentList);
-            post.commentList = newCommentList;
-            navigate('/board/view', {state: {post: post}}, {replace: true})
-            setReplyContent("");
+            if(res.error !== null){
+                alert('알수없는 에러가 발생했습니다.\n관리자에게 문의하세요');
+                return;
+            }
+            else if(res.messege === '게시글이존재하지않음'){
+                alert('더 이상 존재하지 않는 게시글입니다.');
+                window.location.href = '/board';
+            }
+            else if(res.message === '댓글이존재하지않음'){
+                alert('더 이상 존재하지 않는 댓글입니다.');
+                return;
+            }else{
+                const commentId = parseInt(Object.keys(res.mapData)[0]);
+                const newReplyList = res.mapData[commentId];
+                let newCommentList = [...commentList];
+    
+                newCommentList.map((comment) => {
+                    if(comment.id === commentId){
+                        comment.replyList = newReplyList;
+                    }
+                })
+                setCommentList(newCommentList);
+                post.commentList = newCommentList;
+                navigate('/board/view', {state: {post: post}}, {replace: true})
+                setReplyContent("");
+            }
 
         })
         
