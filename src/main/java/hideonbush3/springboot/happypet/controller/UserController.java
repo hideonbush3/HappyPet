@@ -74,17 +74,12 @@ public class UserController {
         ResponseDTO<UserDTO> res = ussrv.update(userDTO, userId);
         return ResponseEntity.ok().body(res);
     }
-    
+
     // 이메일 중복여부
     @GetMapping("/checksignup/email")
     public ResponseEntity<?> readByEmail(@RequestParam String email){
-        try {
-            return ResponseEntity.ok().body(ussrv.isExistByEmail(email));
-        } catch (Exception e) {
-            ResponseDTO<Object> res = new ResponseDTO<>();
-            res.setError(e.getMessage());
-            return ResponseEntity.badRequest().body(res);
-        }
+        ResponseDTO<Object> res = ussrv.isExistByEmail(email);
+        return ResponseEntity.ok().body(res);
     }
 
     // 아이디찾기

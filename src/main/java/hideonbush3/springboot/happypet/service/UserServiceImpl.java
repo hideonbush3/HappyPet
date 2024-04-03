@@ -178,14 +178,15 @@ public class UserServiceImpl implements UserService{
     
     @Override
     public ResponseDTO<Object> isExistByEmail(String email){
+        ResponseDTO<Object> res = new ResponseDTO<>();
         try {
-            ResponseDTO<Object> res = new ResponseDTO<>();
             if(userRepository.existsByEmail(email)){
                 res.setMessage("존재하는이메일");
             }else res.setMessage("존재하지않는이메일");
             return res;
         } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
+            res.setError(e.getMessage());
+            return res;
         }
     }
 
