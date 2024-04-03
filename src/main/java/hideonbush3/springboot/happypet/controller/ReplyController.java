@@ -36,12 +36,7 @@ public class ReplyController {
     // Configuration of RequestBody -> Long id, Long commentId
     @DeleteMapping("/remove")
     public ResponseEntity<?> remove(@RequestBody ReplyDTO dto){
-        try {
-            Map<Long, List<ReplyDTO>> replyList = replyService.delete(dto);
-            return ResponseEntity.ok().body(replyList);
-        } catch (Exception e) {
-            ResponseDTO<Object> res = ResponseDTO.builder().error(e.getMessage()).build();
-            return ResponseEntity.badRequest().body(res);
-        }
+        ResponseDTO<ReplyDTO> res = replyService.delete(dto);
+        return ResponseEntity.ok().body(res);
     }
 }

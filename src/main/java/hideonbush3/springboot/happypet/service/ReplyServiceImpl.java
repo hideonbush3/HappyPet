@@ -77,7 +77,8 @@ public class ReplyServiceImpl implements ReplyService{
     }
 
     @Override
-    public Map<Long, List<ReplyDTO>> delete(ReplyDTO dto) {
+    public ResponseDTO<ReplyDTO> delete(ReplyDTO dto) {
+        ResponseDTO<ReplyDTO> res = new ResponseDTO<>();
         try {
             Long commentId = dto.getCommentId();
 
@@ -92,9 +93,11 @@ public class ReplyServiceImpl implements ReplyService{
             List<ReplyEntity> replyEntities = replyRepository.findAllByCommentEntity(commentEntity);
             List<ReplyDTO> replyDtos = replyEntities.stream().map(ReplyDTO::convertToDto).collect(Collectors.toList()); 
             replyList.put(commentId, replyDtos);
-            return replyList;
+            res.setMapData(replyList);
+            return res;
         } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
+            res.setError(e.getMessage());
+            return res;
         }
     }
     
