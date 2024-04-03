@@ -30,14 +30,8 @@ public class CommentController {
 
     // Configuration of RequestBody -> Long id, Long postId
     @DeleteMapping("/remove")
-    public ResponseEntity<?> remove(@RequestBody CommentDTO dto, @AuthenticationPrincipal String userId){
-        try{
-            List<CommentDTO> dtos = commentService.delete(dto);
-            ResponseDTO<CommentDTO> res = ResponseDTO.<CommentDTO>builder().data(dtos).build();
-            return ResponseEntity.ok().body(res);
-        }catch(Exception e){
-            ResponseDTO<Object> res = ResponseDTO.builder().error(e.getMessage()).build();
-            return ResponseEntity.badRequest().body(res);
-        }
+    public ResponseEntity<?> remove(@RequestBody CommentDTO dto){
+        ResponseDTO<CommentDTO> res = commentService.delete(dto);
+        return ResponseEntity.ok().body(res);
     }
 }

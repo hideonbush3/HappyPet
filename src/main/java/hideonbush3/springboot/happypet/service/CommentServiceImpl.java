@@ -62,14 +62,18 @@ public class CommentServiceImpl implements CommentService{
     }
 
     @Override
-    public List<CommentDTO> delete(CommentDTO dto) {
+    public ResponseDTO<CommentDTO> delete(CommentDTO dto) {
+        ResponseDTO<CommentDTO> res = new ResponseDTO<>();
         try {
             commentRepository.deleteById(dto.getId());
             PostEntity postEntity = PostEntity.builder().id(dto.getPostId()).build();
             List<CommentEntity> commentList = commentRepository.findAllByPostEntity(postEntity);
-            return commentList.stream().map(CommentDTO::convertToDto).collect(Collectors.toList());
+            List<CommentDTO> commentDtoList = commentList.stream().map(CommentDTO::convertToDto).collect(Collectors.toList());
+            res.setData(commentDtoList);
+            return res;
         } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
+            res.setError(e.getMessage());
+            return res;
         }
     }
 
