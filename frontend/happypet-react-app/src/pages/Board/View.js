@@ -28,6 +28,8 @@ export default function View(){
     useEffect(() => {
         const contentContainer = document.getElementById('content-container');
         contentContainer.innerHTML = post.content;
+        const token = localStorage.getItem('happypetToken');
+        if(token === 'null') return;
         call('/user', 'GET', null)
         .then((res) => {
             if(res.object !== null){
@@ -93,6 +95,11 @@ export default function View(){
     }
 
     const writeReplyHandler = () => {
+        const token = localStorage.getItem('happypetToken');
+        if(token === 'null'){
+            alert('로그인 하셔야 합니다.');
+            return;
+        }
         replyContent === "" ? alert("내용을 입력하세요") : 
         call(`/reply/write?postId=${post.id}`, 'POST', {content: replyContent, commentId: selectedCommentId})
         .then((res) => {

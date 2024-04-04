@@ -20,6 +20,11 @@ export default function Post(props){
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        const token = localStorage.getItem('happypetToken');
+        if(token === 'null'){
+            alert('로그인 하셔야 합니다.');
+            return;
+        }
         content === "" ? alert("내용을 입력하세요") : 
         call('/comment/write', 'POST', {content: content, postId: props.post.id})
         .then((res) => {
