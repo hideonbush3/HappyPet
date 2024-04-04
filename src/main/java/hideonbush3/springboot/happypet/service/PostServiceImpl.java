@@ -6,7 +6,6 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -225,13 +224,30 @@ public class PostServiceImpl implements PostService{
         }
 
     @Override
-    public boolean delete(Long id) {
-        Optional<PostEntity> entityForDelete = postRepository.findById(id);
-        if(entityForDelete.isPresent()){
+    public ResponseDTO<?> delete(Long id) {
+        ResponseDTO<?> res = new ResponseDTO<>();
+        try{
+            Optional<PostEntity> optionalPost = postRepository.findById(id);
+            if(!optionalPost.isPresent()){
+                res.setMessage("존재하지않음");
+            }
+
+            PostEntity postToDelete = optionalPost.get();
+            List<ImageEntity> imgs = postToDelete.getImageList();
+            if (!imgs.isEmpty()) {
+                for (ImageEntity img : imgs) {
+                    File fileToDelete = new File(imageDir + img.getName());
+                    fileToDelete.delete();
+                }
+            }
+
             postRepository.deleteById(id);
-            return true;
+            res.setMessage("삭제완료");
+            return res;
+        }catch(Exception e){
+            res.setError(e.getMessage());
+            return res;
         }
-        throw new RuntimeException("존재하지 않는 게시물");
     }
 
     @Override

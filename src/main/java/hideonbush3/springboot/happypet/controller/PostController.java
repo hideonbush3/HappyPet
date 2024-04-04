@@ -70,13 +70,8 @@ public class PostController {
     // Configuration of request body -> id
     @DeleteMapping("/remove")
     public ResponseEntity<?> remove(@RequestParam Long id){
-        try{
-            boolean success = postService.delete(id);
-            return ResponseEntity.ok().body(success);
-        }catch(Exception e){
-            ResponseDTO<Object> res = ResponseDTO.builder().error(e.getMessage()).build();
-            return ResponseEntity.badRequest().body(res);
-        }
+        ResponseDTO<?> res = postService.delete(id);
+        return ResponseEntity.ok().body(res);
     }
 
     @GetMapping("/view")

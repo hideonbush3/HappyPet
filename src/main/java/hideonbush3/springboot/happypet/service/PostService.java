@@ -11,7 +11,7 @@ public interface PostService {
     public List<PostDTO> select();
     public PostDTO insert(String userId, String title, String content, List<MultipartFile> images, String urlAndName); 
     public ResponseDTO<PostDTO> update(String userId, Long id, String title, String content, List<MultipartFile> images, String urlAndName, String[] imagesToDelete); 
-    public boolean delete(Long id);
+    public ResponseDTO<?> delete(Long id);
     public ResponseDTO<PostDTO> selectOne(Long id);
     public ResponseDTO<PostDTO> selectMyPost(String userId);
 }
