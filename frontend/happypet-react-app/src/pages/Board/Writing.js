@@ -68,6 +68,11 @@ export default function Writing(){
     }
 
     const handleSubmit = () => {
+        const token = localStorage.getItem('happypetToken');
+        if(token === 'null'){
+            alert('로그인 세션이 만료됐습니다.');
+            window.location.href = '/user/login';
+        }
         if(title.trim() === ''){
             alert('제목을 입력하세요.');
             return;
@@ -119,19 +124,13 @@ export default function Writing(){
             }
         })
         .then((res) => {
-            if(res.error === undefined){
-                navigate('/board/view', {state: {post: res}});
-            }else if(res.error === '존재하지 않는 유저'){
-                alert('세션이 만료됐습니다.\n재로그인하세요.');
-                localStorage.setItem('happypetToken', null);
-                window.location.href = '/user/login';
+            if(res.error === null){
+                navigate('/board/view', {state: {post: res.object}});
             }else{
-                alert('페이지를 새로고침한 후 재작성하세요.\n그래도 작성이 안된다면 관리자에게 문의하세요.')
+                alert('알 수 없는 에러가 발생했습니다.\n관리자에게 문의하세요.');
+                return;
             }
           })
-        .catch(error => {
-            throw error;
-        })
     };
   
     return(
