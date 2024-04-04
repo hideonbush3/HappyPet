@@ -33,7 +33,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
                 .antMatchers("/",
                 "/user/signup", "/user/signin", "/user/checksignup/email", "/user/checksignup/id", "/user/find-id",
                 "/post", "/post/view", 
-                "/favorite/isexist", 
+                "/favorite/is-added", 
                 "/facilityAPI/**", 
                 "/auth-code/**").permitAll()
             .anyRequest()   // 위 경로 이외의 모든 경로는 인증해야됨.

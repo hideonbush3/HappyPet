@@ -20,18 +20,21 @@ public class FavoriteServiceImpl implements FavoriteService{
     
     @Override
     public ResponseDTO<FavoriteDTO> selectOne(FavoriteDTO dto, String userId){
+        ResponseDTO<FavoriteDTO> res = new ResponseDTO<>();
         try{
             final UserEntity userEntity = UserEntity.builder().id(userId).build();
             Optional<FavoriteEntity> optionalEntity = favoriteRepository.findByUserEntityAndNameAndAddr(userEntity, dto.getName(), dto.getAddr());
             
-            ResponseDTO<FavoriteDTO> responseDTO = new ResponseDTO<>();
             if(optionalEntity.isPresent()){
                 FavoriteDTO favoriteDTO = FavoriteDTO.toFavoriteDTO(optionalEntity.get());
-                responseDTO.setObject(favoriteDTO);
+                res.setObject(favoriteDTO);
+            }else{
+                res.setMessage("추가되지않음");
             }
-            return responseDTO;
+            return res;
         }catch(Exception e){
-            throw new RuntimeException(e.getMessage());
+            res.setError(e.getMessage());
+            return res;
         }
     }
     @Override
