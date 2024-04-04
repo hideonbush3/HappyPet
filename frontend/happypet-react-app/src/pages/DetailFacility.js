@@ -57,12 +57,15 @@ function DetailFacility(){
     }
 
     useEffect(() => {
-        call('/favorite/isexist', 'POST', f)
+        call('/favorite/is-added', 'POST', f)
         .then((res) => {
             if(res.object !== null){
                 setAddedToFavorites(res.object)
-            }else{
+            }else if(res.message === '추가되지않음'){
                 setAddedToFavorites(null);
+            }else{
+                alert('즐겨찾기 여부를 확인하다가 에러가 발생했습니다.\n관리자에게 문의하세요.');
+                return;
             }
         });
     }, [f])

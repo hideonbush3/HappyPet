@@ -58,7 +58,7 @@ function Mypage(props) {
         call('/post/my-post', 'GET', null)
         .then((res) => {
             if(res.error !== null){
-                alert('내가 작성한 게시들 데이터들을 불러오다가\n알 수 없는 에러가 발생했습니다.\n관리자에게 문의하세요');
+                alert('작성한 게시글 데이터들을 불러오다가\n알 수 없는 에러가 발생했습니다.\n관리자에게 문의하세요');
                 return;
             }
             else{
@@ -73,19 +73,21 @@ function Mypage(props) {
     }
 
     const facilityNameClickEH = (facility) => {
-        call('/favorite/isexist', 'POST', facility)
+        call('/favorite/is-added', 'POST', facility)
         .then((res) => {
             if(res.object !== null){
                 setAddedToFavorites(res.object)
-
-            }else{
+            }else if(res.message === '추가되지않음'){
                 setAddedToFavorites(null);
-                setSelectedFacility(facility);
-                setShowModal(true);
+                // setSelectedFacility(facility);
+                // setShowModal(true);
+            }else{
+                alert('즐겨찾기 여부를 확인하다가 에러가 발생했습니다.\n관리자에게 문의하세요.');
+                return;
             }
+            setSelectedFacility(facility);
+            setShowModal(true);
         });
-        setSelectedFacility(facility);
-        setShowModal(true);
     }
 
     const postNameClickEH = (id) => {
