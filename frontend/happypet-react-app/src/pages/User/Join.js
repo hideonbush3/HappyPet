@@ -162,7 +162,12 @@ function Join(props){
                 body: '인증코드는 %s 입니다.\n회원가입으로 돌아가세요.'
             })
             .then((res) => {
-                return res.object;
+                if(res.object !== null){
+                    return res.object;
+                }else if(res.error !== null){
+                    alert('알 수 없는 에러가 발생했습니다.\n관리자에게 문의하세요.');
+                    return;
+                }
             })
             .then((object) => {
                 setAuthCodeCreatedDate(object.createdDate);
@@ -176,7 +181,8 @@ function Join(props){
         });
     }
 
-    const verifyAuthCode = () => {
+    const verifyAuthCode = (e) => {
+        e.preventDefault();
         const email = email1 + '@' + email2;
         call('/auth-code/check', 'DELETE', {
             email: email,
