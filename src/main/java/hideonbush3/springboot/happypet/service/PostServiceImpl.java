@@ -100,7 +100,7 @@ public class PostServiceImpl implements PostService{
                     .commentList(new ArrayList<>())
                     .build();
             
-            PostEntity savedPostEntities = postRepository.save(postEntity);
+            PostEntity savedPost = postRepository.save(postEntity);
             
             List<ImageEntity> savedImageEntities = new ArrayList<>();
 
@@ -118,15 +118,15 @@ public class PostServiceImpl implements PostService{
                         .name(nameToSave)
                         .bytes(image.getSize())
                         .regdate(regdate)
-                        .postEntity(PostEntity.builder().id(savedPostEntities.getId()).build())
+                        .postEntity(PostEntity.builder().id(savedPost.getId()).build())
                         .build();
     
                     savedImageEntities.add(imageRepository.save(imageEntity));
                 }
             }
 
-            savedPostEntities.setImageList(savedImageEntities);
-            return PostDTO.convertToDto(savedPostEntities);
+            savedPost.setImageList(savedImageEntities);
+            return PostDTO.convertToDto(savedPost);
         }catch(Exception e){
             throw new RuntimeException(e.getMessage());
         }
@@ -141,23 +141,82 @@ public class PostServiceImpl implements PostService{
         String[] imagesToDelete) {
             ResponseDTO<PostDTO> res = new ResponseDTO<>();        
             try{
-                Optional<PostEntity> origin = postRepository.findById(id);
+                LocalDateTime regdate = LocalDateTime.now();
+                String uuid = (LocalDate.now() + "" + LocalTime.now())
+                .replace(".", "")
+                .replace(":", "")
+                .replace("-", "");
+                ArrayDeque<String> uuidArr = new ArrayDeque<>();
 
-                origin.ifPresent(post -> {
-                    post.setTitle(title);
-                    post.setContent(content);
-
-                    postRepository.save(post);
-                });
-                if (imagesToDelete.length > 0) {
-                    Arrays.stream(imagesToDelete)
-                        .peek(imageRepository::deleteByName)
-                        .map(imageName -> new File(imageDir + imageName))
-                        .forEach(File::delete);
+                if(urlAndName != null){
+                    ObjectMapper objectMapper = new ObjectMapper();
+                    Map<String, String> map = null;
+                    try{
+                        map = objectMapper.readValue(urlAndName, new TypeReference<Map<String, String>>(){});
+                    }catch(Exception e){
+                        throw new RuntimeException("urlAndName 형변환 실패");
+                    }
+        
+                    for(Map.Entry<String, String> entry : map.entrySet()){
+                        String uuidString = uuid + Utils.createUuid(0, 4);
+                        
+                        String key = entry.getKey();
+                        String value = entry.getValue();
+                        String[] parts = value.split("\\.");
+                        String src = "http://localhost/images/" + parts[0] + " " + uuidString + "." + parts[1];
+                        content = content.replace(key, src);
+    
+                        uuidArr.add(uuidString);
+                    }
                 }
 
-                PostEntity updatedEntity = postRepository.findById(id).get();
-                res.setObject(PostDTO.convertToDto(updatedEntity));
+                PostEntity postToUpdate = postRepository.findById(id).get();
+
+                postToUpdate.setTitle(title);
+                postToUpdate.setContent(content);
+                PostEntity updatedPost = postRepository.save(postToUpdate);
+
+                List<ImageEntity> savedImageEntities = new ArrayList<>();
+
+                if(urlAndName != null){
+                    for(MultipartFile image: images){
+                        String nameAndExt = image.getOriginalFilename();
+                        String[] parts = nameAndExt.split("\\.");
+                        String name = parts[0];
+                        String ext = parts[1];
+                        String nameToSave = name + " " + uuidArr.poll() + "." + ext;
+        
+                        image.transferTo(new File(imageDir + nameToSave));
+                        
+                        ImageEntity imageEntity = ImageEntity.builder()
+                            .name(nameToSave)
+                            .bytes(image.getSize())
+                            .regdate(regdate)
+                            .postEntity(PostEntity.builder().id(updatedPost.getId()).build())
+                            .build();
+        
+                        savedImageEntities.add(imageRepository.save(imageEntity));
+                    }
+                }
+                
+                if (imagesToDelete.length > 0) {
+                    for(int i = 0; i < imagesToDelete.length; i++){
+                        imageRepository.deleteByName(imagesToDelete[i]);
+                        File fileToDelete = new File(imageDir + imagesToDelete[i]);
+                        fileToDelete.delete();
+                    }
+                    updatedPost = postRepository.findById(id).get();
+                }
+                
+                if(savedImageEntities.size() != 0){
+                    List<ImageEntity> originImageEntities = updatedPost.getImageList();
+                    for(int i = 0; i < savedImageEntities.size(); i++){
+                        originImageEntities.add(savedImageEntities.get(i));
+                    }
+                    updatedPost.setImageList(originImageEntities);
+                }
+
+                res.setObject(PostDTO.convertToDto(updatedPost));
                 return res;
             }catch(Exception e){
                 res.setError(e.getMessage());
@@ -176,15 +235,25 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    public PostDTO selectOne(Long id) {
-        Optional<PostEntity> origin = postRepository.findById(id);
-        origin.ifPresent(post -> {
-            post.setViews(post.getViews() + 1);
-            postRepository.save(post);
-        });
+    public ResponseDTO<PostDTO> selectOne(Long id) {
+        ResponseDTO<PostDTO> res = new ResponseDTO<>();
+        try {
+            Optional<PostEntity> optionalPost = postRepository.findById(id);
+            if(!optionalPost.isPresent()){
+                res.setMessage("존재하지않는게시글");
+            }else{
+                PostEntity post = optionalPost.get();
+                post.setViews(post.getViews() + 1);
+                postRepository.save(post);
+                PostEntity entity = postRepository.findById(id).get();
+                res.setObject(PostDTO.convertToDto(entity));
+            }
+            return res;
+        } catch (Exception e) {
+            res.setError(e.getMessage());
+            return res;
+        }
 
-        PostEntity entity = postRepository.findById(id).get();        
-        return PostDTO.convertToDto(entity);
     }
 
     @Override

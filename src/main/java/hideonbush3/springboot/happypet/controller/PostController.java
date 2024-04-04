@@ -81,12 +81,8 @@ public class PostController {
 
     @GetMapping("/view")
     public ResponseEntity<?> readOne(@RequestParam Long id){
-        try {
-            return ResponseEntity.ok().body(postService.selectOne(id));
-        } catch (Exception e) {
-            ResponseDTO<Object> res = ResponseDTO.builder().error(e.getMessage()).build();
-            return ResponseEntity.badRequest().body(res);
-        }
+        ResponseDTO<PostDTO> res = postService.selectOne(id);
+        return ResponseEntity.ok().body(res);
     }
 
     @GetMapping("/my-post")
