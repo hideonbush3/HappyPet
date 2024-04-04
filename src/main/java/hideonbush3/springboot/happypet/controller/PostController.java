@@ -45,12 +45,7 @@ public class PostController {
         @RequestParam("content") String content,
         @RequestParam(value="images", required = false) List<MultipartFile> images,
         @RequestParam(value="urlAndName", required = false) String urlAndName){
-            try {
                 return ResponseEntity.ok().body(postService.insert(userId, title, content, images, urlAndName));
-            } catch (Exception e) {
-                ResponseDTO<Object> res = ResponseDTO.builder().error(e.getMessage()).build();
-                return ResponseEntity.badRequest().body(res);
-            }
     }
 
     // Configuration of request body -> title, content

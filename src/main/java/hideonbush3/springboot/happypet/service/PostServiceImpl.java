@@ -52,14 +52,13 @@ public class PostServiceImpl implements PostService{
 
     @Override
     @Transactional
-    public PostDTO insert(
+    public ResponseDTO<PostDTO> insert(
         String userId, String title, 
         String content, List<MultipartFile> images, 
         String urlAndName) {
+        ResponseDTO<PostDTO> res = new ResponseDTO<>();
         try{
-            // Validation
-            Optional<UserEntity> optionalUserEntity = userRepository.findById(userId);
-            UserEntity userEntity = optionalUserEntity.orElseThrow(() -> new RuntimeException("존재하지 않는 유저"));
+            UserEntity user = userRepository.findById(userId).get();
 
             LocalDateTime regdate = LocalDateTime.now();
             String uuid = (LocalDate.now() + "" + LocalTime.now())
@@ -95,7 +94,7 @@ public class PostServiceImpl implements PostService{
                     .content(content)
                     .regdate(regdate)
                     .views(0L)
-                    .userEntity(userEntity)
+                    .userEntity(user)
                     .commentList(new ArrayList<>())
                     .build();
             
@@ -125,9 +124,11 @@ public class PostServiceImpl implements PostService{
             }
 
             savedPost.setImageList(savedImageEntities);
-            return PostDTO.convertToDto(savedPost);
+            res.setObject(PostDTO.convertToDto(savedPost));
+            return res;
         }catch(Exception e){
-            throw new RuntimeException(e.getMessage());
+            res.setError(e.getMessage());
+            return res;
         }
     }
     
