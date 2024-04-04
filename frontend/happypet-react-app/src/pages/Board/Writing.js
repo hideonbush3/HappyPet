@@ -21,29 +21,33 @@ export default function Writing(){
         setContent(content.innerHTML);
     };
 
-    // 파일첨부 후 본문작성란에 포커싱 => 포커싱된 곳에 이미지 렌더링
-    const focusContentInput = () => {
-        document.getElementById('content').focus({preventScroll: true});
-    }
     
     // 본문 입력마다 내용을 추적했을때 첨부했던 이미지를 삭제했는지 파악하고
     // 삭제했을경우 요청할때 보낼 데이터를 업데이트하기 위함
     useEffect(() => {
         detachImage();
     }, [content])
+    
     const detachImage = () => {
-        const images = document.getElementById('content').querySelectorAll('img');
-        if(images.length === 0) return;
+        const imgs = document.getElementById('content').querySelectorAll('img');
+        
+        if(imgs.length === 0) return;
+        
         const newMap = new Map();
-        images.forEach((image) => {
-            if(urlAndFile.has(image.src)){
-                newMap.set(image.src, urlAndFile.get(image.src));
+        imgs.forEach((img) => {
+            if(urlAndFile.has(img.src)){
+                newMap.set(img.src, urlAndFile.get(img.src));
             }
         });
-
+        
         setUrlAndFile(newMap);
     }
-
+    
+    // 파일첨부 후 본문작성란에 포커싱 => 포커싱된 곳에 이미지 렌더링
+    const focusContentInput = () => {
+        document.getElementById('content').focus({preventScroll: true});
+    }
+    
     const handleImageUpload = (e) => {
         const files = e.target.files;
         const originalUrlAndFile = new Map(urlAndFile);
@@ -65,7 +69,7 @@ export default function Writing(){
 
     const handleSubmit = () => {
         if(title.trim() === ''){
-            alert('제목을 입력하세요');
+            alert('제목을 입력하세요.');
             return;
         }
 
