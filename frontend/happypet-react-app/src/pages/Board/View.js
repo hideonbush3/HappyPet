@@ -50,11 +50,13 @@ export default function View(){
         if(confirm){
             call(`/post/remove?id=${post.id}`, "DELETE", null)
             .then((res) => {
-                if(res.error !== undefined) {
-                    alert('이미 삭제된 게시글이거나 알 수 없는 문제가 발생했습니다 게시판 메인화면으로 이동합니다');
+                if(res.message === '존재하지않음'){
+                    alert('데이터베이스에 존재하지 않는 게시글 입니다.\n게시판으로 이동합니다.');
                     window.location.href = '/board';
-                }
-                else{
+                }else if(res.error !== null){
+                    alert('알 수 없는 에러가 발생했습니다.\n관리자에게 문의하세요.');
+                    return;
+                }else if(res.message === '삭제완료'){
                     window.location.href = '/board';
                 }
             })
