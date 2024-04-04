@@ -11,7 +11,12 @@ function Board(){
     useEffect(() => {
         call('/post', 'GET', null)
           .then((res) => {
-            setItems(res.data);
+            if(res.error !== null){
+              alert('게시글 데이터를 불러오다가 에러가 발생했습니다.\n관리자에게 문의하세요.');
+              return;
+            }else{
+              setItems(res.data);
+            }
           });
       }, []);
 
