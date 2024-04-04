@@ -15,11 +15,11 @@ export default function Modify(){
     useEffect(() => {
         const contentContainer = document.getElementById('content');
         contentContainer.innerHTML = post.content;
-    }, [])  
+    }, []);
 
     const cancelEventHandler = () => {
         navigate('/board/view', {state: {post: post}});
-    }
+    };
 
     const handleTitleChange = (e) => {
       setTitle(e.target.value);
@@ -30,9 +30,31 @@ export default function Modify(){
         setContent(content.innerHTML);
     };
   
+    // 본문 입력마다 내용을 추적했을때 첨부했던 이미지를 삭제했는지 파악하고
+    // 삭제했을경우 요청할때 보낼 데이터를 업데이트하기 위함
+    useEffect(() => {
+        detachImage();
+    }, [content])
+    
+    const detachImage = () => {
+        const imgs = document.getElementById('content').querySelectorAll('img');
+        
+        if(imgs.length === 0) return;
+        
+        const newMap = new Map();
+        imgs.forEach((img) => {
+            if(urlAndFile.has(img.src)){
+                newMap.set(img.src, urlAndFile.get(img.src));
+            }
+        });
+        
+        setUrlAndFile(newMap);
+    }
+
     const focusContentInput = () => {
         document.getElementById('content').focus({preventScroll: true});
-    }
+    };
+
     const handleImageUpload = (e) => {
         const files = e.target.files;
         const originalUrlAndFile = new Map(urlAndFile);
@@ -55,18 +77,18 @@ export default function Modify(){
     const handleSubmit = (e) => {
         e.preventDefault();
         if(post.title === title && post.content === content){
-            alert("변경된 내용이 없습니다");
+            alert("변경된 내용이 없습니다.");
             return;
-        }else if(title === ''){
-            alert('제목을 입력하세요');
+        }else if(title.trim() === ''){
+            alert('제목을 입력하세요.');
             return;
         }
 
         const input = document.getElementById('content');
         const text = input.textContent.trim();
-        const images = input.querySelectorAll('img');
+        const imgs = input.querySelectorAll('img');
 
-        if(text === '' && images.length ===0){
+        if(text === '' && imgs.length === 0){
             alert('내용을 입력하세요');
             return;
         }
@@ -80,26 +102,26 @@ export default function Modify(){
         // 원본의 이미지들과 본문 이미지들을 비교해서 원본엔 있지만 본문에 없을 경우(작성자가 원본을 삭제)
         // 서버에 삭제됐음을 알리기위해 imagesToDelete 배열에 해당 이미지들의 이미지명을 담는다.
         let imagesToDelete = [];
-        const originImages = post.imageList;
-        let originImagesNames = [];
+        const originImgs = post.imageList;
+        let originImgNames = [];
 
-        if(originImages.length > 0){
-            originImages.forEach(image => {
-                originImagesNames.push(image.name);
+        if(originImgs.length > 0){
+            originImgs.forEach(image => {
+                originImgNames.push(image.name);
             })
         }
         
-        if(images.length > 0 && originImagesNames.length > 0){
+        if(imgs.length > 0 && originImgNames.length > 0){
             let allImagesNames = [];
-            images.forEach((image) => {
+            imgs.forEach((image) => {
                 const url = new URL(image.src);
                 const originName = decodeURIComponent(url.pathname.split('/').pop());
                 allImagesNames.push(originName);
             })
-            imagesToDelete = originImagesNames.filter(
+            imagesToDelete = originImgNames.filter(
                 (imageName) => !allImagesNames.includes(imageName));
-        }else if(images.length === 0 && originImagesNames.length > 0){
-            imagesToDelete = originImagesNames;
+        }else if(imgs.length === 0 && originImgNames.length > 0){
+            imagesToDelete = originImgNames;
         }
         formData.append('imagesToDelete', imagesToDelete);
 
@@ -137,7 +159,7 @@ export default function Modify(){
                 alert('이미지 파일만 첨부 가능합니다.');
                 return;
             }else{
-                alert('알 수 없는 에러가 발생했습니다.\n관리자에게 문의하세요');
+                alert('알 수 없는 에러가 발생했습니다.\n관리자에게 문의하세요.');
                 return;
             }
         })
