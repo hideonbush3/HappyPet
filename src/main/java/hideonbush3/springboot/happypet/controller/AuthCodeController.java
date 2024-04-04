@@ -25,7 +25,6 @@ public class AuthCodeController {
 
     // 인증코드 확인
     // Configuration of RequestBody -> String email, String authCode
-    
     @DeleteMapping("/check")
     public ResponseEntity<?> retrieve(
         @RequestParam(required = false) String process,
@@ -40,13 +39,7 @@ public class AuthCodeController {
     public ResponseEntity<?> create(
         @RequestParam(required = false) String createdDate,
         @RequestBody MailContentDTO emailContentDTO) {
-        try {
             ResponseDTO<AuthMailDTO> res = mailService.sendAuthCode(emailContentDTO, createdDate);
             return ResponseEntity.ok().body(res);
-        } catch (Exception e) {
-            ResponseDTO<Object> res = new ResponseDTO<>();
-            res.setError(e.getMessage());
-            return ResponseEntity.badRequest().body(res);
-        }
     }   
 }

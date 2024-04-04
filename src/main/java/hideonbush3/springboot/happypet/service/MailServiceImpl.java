@@ -115,6 +115,7 @@ public class MailServiceImpl implements MailService{
     @Transactional
     @Override
     public ResponseDTO<AuthMailDTO> sendAuthCode(MailContentDTO mailContentDTO, String createdDate) {
+        ResponseDTO<AuthMailDTO> res = new ResponseDTO<>();
         try {
             String email = null;
             // 회원가입시 이메일 인증
@@ -150,11 +151,11 @@ public class MailServiceImpl implements MailService{
 
             AuthMailEntity savedEntity = authMailRepository.save(authMailEntity);
             AuthMailDTO dto = AuthMailDTO.convertToDto(savedEntity);
-            ResponseDTO<AuthMailDTO> res = new ResponseDTO<>();
             res.setObject(dto);
             return res;
         } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
+            res.setError(e.getMessage());
+            return res; 
         }
     }   
 }
