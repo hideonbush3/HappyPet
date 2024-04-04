@@ -26,15 +26,8 @@ public class PostController {
 
     @GetMapping
     public ResponseEntity<?> retrieve(){
-        try {
-            List<PostDTO> dtos = postService.select();
-            ResponseDTO<PostDTO> res = ResponseDTO.<PostDTO>builder().data(dtos).build();
-            return ResponseEntity.ok().body(res);
-        } catch (Exception e) {
-            ResponseDTO<Object> res = ResponseDTO.<Object>builder().error(e.getMessage()).build();
-            return ResponseEntity.badRequest().body(res);
-        }
-
+        ResponseDTO<PostDTO> res = postService.select();
+        return ResponseEntity.ok().body(res);
     }
 
     // Configuration of request body -> FormData{title, content}

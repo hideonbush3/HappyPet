@@ -44,10 +44,17 @@ public class PostServiceImpl implements PostService{
     private ImageRepository imageRepository;
 
     @Override
-    public List<PostDTO> select() {
-        List<PostEntity> entities = postRepository.findAll();
-        List<PostDTO> dtos = entities.stream().map(PostDTO::convertToDto).collect(Collectors.toList());
-        return dtos;
+    public ResponseDTO<PostDTO> select() {
+        ResponseDTO<PostDTO> res = new ResponseDTO<>();
+        try {
+            List<PostEntity> entities = postRepository.findAll();
+            List<PostDTO> dtos = entities.stream().map(PostDTO::convertToDto).collect(Collectors.toList());
+            res.setData(dtos);
+            return res;
+        } catch (Exception e) {
+            res.setError(e.getMessage());
+            return res;
+        }
     }
 
     @Override
