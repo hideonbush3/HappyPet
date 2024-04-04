@@ -91,7 +91,12 @@ function Mypage(props) {
     const postNameClickEH = (id) => {
         call(`/post/view?id=${id}`, 'GET', null)
         .then((res) => {
-            navigate('/board/view', {state: {post: res}});
+            if(res.error !== null){
+                alert('알 수 없는 에러가 발생했습니다.\n관리자에게 문의하세요.');
+                return;
+            }else{
+                navigate('/board/view', {state: {post: res.object}});
+            }
         });
     }
 
