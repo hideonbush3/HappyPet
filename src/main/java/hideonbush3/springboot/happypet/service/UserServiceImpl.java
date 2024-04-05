@@ -1,16 +1,22 @@
 package hideonbush3.springboot.happypet.service;
 
 import java.util.Optional;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import hideonbush3.springboot.happypet.dto.ResponseDTO;
 import hideonbush3.springboot.happypet.dto.UserDTO;
+import hideonbush3.springboot.happypet.model.ImageEntity;
+import hideonbush3.springboot.happypet.model.PostEntity;
 import hideonbush3.springboot.happypet.model.UserEntity;
 import hideonbush3.springboot.happypet.persistence.CommentRepository;
 import hideonbush3.springboot.happypet.persistence.ReplyRepository;
@@ -19,6 +25,8 @@ import hideonbush3.springboot.happypet.security.TokenProvider;
 
 @Service("ussrv")
 public class UserServiceImpl implements UserService{
+    @Value("${image.dir}")
+    private String imgDir;
 
     @Autowired
     private UserRepository userRepository;
@@ -114,6 +122,28 @@ public class UserServiceImpl implements UserService{
         ResponseDTO<?> res = new ResponseDTO<>();
         try {                 
             UserEntity userEntity = userRepository.findById(userId).get();
+            
+            List<PostEntity> postList = userEntity.getPostList();
+            
+            if(!postList.isEmpty()){
+                List<List<ImageEntity>> imgList = new ArrayList<>();
+                for(int i = 0; i < postList.size(); i++){
+                    if(!postList.get(i).getImageList().isEmpty()){
+                        imgList.add(postList.get(i).getImageList());
+                    }
+                }
+                if(!imgList.isEmpty()){
+                    for(int i = 0; i< imgList.size(); i++){
+                        int size = imgList.get(i).size();
+                        for(int j = 0; j < size; j++){
+                            ImageEntity img = imgList.get(i).get(j);
+                            File imgToDelete = new File(imgDir + img.getName());
+                            imgToDelete.delete();
+                        }
+                    }
+                }
+            }
+
             replyRepository.deleteAllByUserEntity(userEntity);
             commentRepository.deleteAllByUserEntity(userEntity);
             userRepository.delete(userEntity);  
