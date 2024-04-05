@@ -347,7 +347,7 @@ function Join(props){
                     </div>
                 </div>
                 <div>
-                    <button className='mb-2' style={{width: '100%'}} 
+                    <button className={style.submit_btn} 
                             onClick={(e) => requestAuthCode(e, authCodeBtnText === '다른 메일로 인증하기' ? true : false)} >
                             {authCodeBtnText}
                     </button>
@@ -355,7 +355,6 @@ function Join(props){
 
                 <div>
                     <button className={style.submit_btn}
-                            style={{width: '100%'}}
                             type="submit">{btn}
                     </button>
                 </div>

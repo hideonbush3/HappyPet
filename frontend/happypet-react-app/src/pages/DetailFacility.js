@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { Card, Col, Container, Row } from "react-bootstrap";
 import { useLocation } from "react-router-dom";
 import {Map, MapMarker} from "react-kakao-maps-sdk";
 import style from './DetailFacility.module.css';
@@ -74,18 +73,16 @@ function DetailFacility(){
     }
 
     return(
-        <Container fluid className={`${style.container}`}>
-        <Row className={style.body}>
-        <Col className={`${style.contentContainer}`}>
+        <div fluid className={`${style.container}`}>
+        <div className={`${style.contentContainer}`}>
 
-            <Card className="mt-3 mb-3">
-                <Card.Header className={`${style.detailFacilityTitle} text-center`}>
+                <div className={`${style.detailFacilityTitle} text-center`}>
                     {f.name}
                     {addedToFavorites !== null
                   ? <BsSuitHeartFill onClick={clickDeleteFavorite} className={style.star} size="30px"color="#fc1232"/> 
                   : <BsSuitHeart onClick={clickAddFavorite} className={style.star} size="30px"color="black"/>}
-                </Card.Header>
-                <Card.Body className="text-muted">
+                </div>
+                <div className="text-muted">
                     <Map
                         center={position}
                         style={{
@@ -98,7 +95,7 @@ function DetailFacility(){
                     <div className="text-center mt-2"><strong>시설유형</strong></div>
                     <div className="text-center mb-2">{f.type}</div>
                     <table>
-                        <tbody className={`${style.detailFacilityInfoTable}`}>
+                        <tbody className={`${style.info_table}`}>
                             <tr><td><strong>도로명주소</strong></td><td className="text-center">{f.addr}</td></tr>
                             <tr><td><strong>시설유형</strong></td><td className="text-center">{f.type}</td></tr>
                             <tr><td><strong>자치시</strong></td><td className="text-center">{f.sigun}</td></tr>
@@ -111,18 +108,17 @@ function DetailFacility(){
                             <tr><td><strong>휴업일</strong></td><td className="text-center">{f.restDay === "null" ? "-" : f.restDay}</td></tr>
                         </tbody>
                     </table>
-                </Card.Body>
-                <Card.Body>
-                    <div className="text-end">
-                        <button onClick={toMainPage}>목록으로</button>
+                </div>
+                <div>
+                    <div className={style.btn_container}>
+                        <button className={style.to_main_btn}onClick={toMainPage}>목록으로</button>
                     </div>
-                </Card.Body>
-            </Card>
+                </div>
 
-        </Col>
-        </Row>
+
+        </div>
         <ToastMessage show={showToastMessage} onHide={() => setShowToastMessage(false)} process={process}/>
-        </Container>
+        </div>
     )
 }
 

@@ -1,13 +1,16 @@
 .container{
     background-color: #f4f5f9;
     padding: 30px 0;
+    height: 80vh;
+    align-items: center;
+    display: flex;
 }
 
 .subContainer{
     background-color: white;
     margin: auto;
     padding: 30px;
-    max-width: 1400px;
+    min-width: 1400px;
     box-shadow: 0px 3px 8px #9d9d9d;
     border-radius: 8px;
     display: flex;
@@ -34,12 +37,9 @@
     font-weight: bold;
     justify-content: center;
     align-items: center;
+    color: white;
+    font-size: 24px;
 }
-
-.title h4{
-    color: black;
-}
-
 
 
 

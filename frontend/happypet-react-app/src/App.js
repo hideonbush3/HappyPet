@@ -3,12 +3,13 @@ import FacilityList from './component/FacilityList';
 import InfoModal from './component/InfoModal';
 import SearchBar from './component/SearchBar';
 import MyPagination from './component/MyPagination';
-import style from './Main.module.css';
+import style from './App.module.css';
 import LoadFacilityListService from './service/LoadFacilityListService';
+import ToastMessage from './component/ToastMessage';
 
 function App() {
   const [addedToFavorites, setAddedToFavorites] = useState();  
-  const [facilityList, setFacilityList] = useState([{}]); 
+  const [facilityList, setFacilityList] = useState([]); 
   const [filteredFacilityList, setFilteredFacilityList] = useState([]);
   const [markerList, setMarkerList] = useState([]);
 
@@ -23,6 +24,8 @@ function App() {
   const [types, setTypes] = useState();
 
   const [searchTerm, setSearchTerm] = useState('');
+
+  const [showToastMessage, setShowToastMessage] = useState(false);
     
   function facilityNameClickEH(facility){
     myMap.setCenter(new window.kakao.maps.LatLng(facility.lat, facility.lot));
@@ -43,7 +46,8 @@ function App() {
       setMarkerList, 
       viewModal,
       setSiguns,
-      setTypes
+      setTypes,
+      setShowToastMessage
     });
   }, []);
 
@@ -140,7 +144,7 @@ function App() {
         <div className={`${style.subContainer}`} >
 
             <div className={style.section1}>
-              <div className={`${style.title}`}><h4>우리동네 반려동물 의료시설</h4></div>
+              <div className={`${style.title}`}>우리동네 반려동물 의료시설</div>
               <SearchBar 
                 types={types} 
                 setTypes={setTypes} 
@@ -176,6 +180,11 @@ function App() {
         addedToFavorites={addedToFavorites} 
         setAddedToFavorites={setAddedToFavorites}
         show={showModal} onHide={() => setShowModal(false)} />
+
+      <ToastMessage
+        show={showToastMessage}
+        process='시설 목록 불러오는 중..'/>
+
     </div>
   );
 }

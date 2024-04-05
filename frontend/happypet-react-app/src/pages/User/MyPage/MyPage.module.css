@@ -1,5 +1,6 @@
 .mainContainer{
     background-color: #f4f5f9;
+    min-height: 80vh;
   }
 .subContainer{
   max-width: 1150px;
@@ -98,6 +99,7 @@
   border: none;
   background-color: #15AE9A;
   margin-right: 10px;
+  color: white;
 }
 
 .btn button:last-child{
@@ -105,6 +107,7 @@
   border: none;
   background-color: black;
   margin-right: 10px;
+  color: white;
 }
 
 .btn button:first-child:hover{
@@ -200,6 +203,7 @@ cursor: pointer;
 .postTbody p{
   color: black;
   text-align: center;
+  justify-content: center;
 }
 
 .postTbody p:nth-child(1){

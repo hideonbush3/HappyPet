@@ -5,6 +5,7 @@ import InfoModal from "../../../component/InfoModal";
 import { useNavigate } from "react-router-dom";
 import ReAuthModal from "../../../component/ReAuthModal";
 import NoData from "../../../component/NoData";
+import ToastMessage from "../../../component/ToastMessage";
 
 function Mypage(props) {
     const navigate = useNavigate();
@@ -27,6 +28,7 @@ function Mypage(props) {
     // 내 게시글
     const [postList, setPostList] = useState();
     
+    const [showToastMessage, setShowToastMessage] = useState(false);
     // 유저정보
     useEffect(() => {
         call('/user', 'GET', null)
@@ -119,6 +121,7 @@ function Mypage(props) {
             else if(res.message === 'withdrawal'){
                 const result = window.confirm("회원탈퇴 하시겠습니까?");
                 if(result){
+                    setShowToastMessage(true);
                     call('/user/remove', 'DELETE')
                     .then((res) => {
                         if(res.message === '탈퇴완료'){
@@ -129,7 +132,8 @@ function Mypage(props) {
                         }else{
                             alert('회원님의 데이터를 삭제하는도중에 알수없는 에러가 발생했습니다.\n재시도하거나 관리자에게 문의하세요.')
                             return;
-                        }    
+                        }
+                        setShowToastMessage(false);
                     });
                 }else {
                     setShowReAuthModal(false);
@@ -258,6 +262,10 @@ function Mypage(props) {
                 show={showReAuthModal} 
                 onHide={() => setShowReAuthModal(false)} 
                 reAuth={reAuth}/>
+
+            <ToastMessage
+                process='탈퇴 처리중..'
+                show={showToastMessage}/>
         </div>
     )
 }
