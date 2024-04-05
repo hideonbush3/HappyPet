@@ -68,6 +68,7 @@
 .btn button:first-child{
     margin-right: 10px;
     background-color: black;
+    color: white;
 }
 
 .btn button:first-child:hover{
@@ -76,7 +77,7 @@
 
 .btn button:last-child{
     background-color: #15AE9A;
-
+    color: white;
 }
 
 .btn button:last-child:hover{

@@ -50,8 +50,9 @@
     background-color: #595959;
 }
 
-
-
+.btn button{
+    color: white;
+}
 
 
 /* 작성자 정보 */
@@ -322,6 +323,7 @@ button{
     width: 100px;
     justify-content: center;
     align-items: center;
+    color: white;
 }
 
 button:hover{

@@ -174,7 +174,7 @@ export default function View(){
                 <div className={style.title}>
                     <p>{post.title}</p>
                     {sessionUser && sessionUser.nickname && sessionUser.nickname === post.nickname && (
-                        <div>
+                        <div className={style.btn}>
                             <button onClick={modifyHandler}>수정</button>
                             <button onClick={removeHandler}>삭제</button>
                         </div>
