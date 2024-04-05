@@ -1,7 +1,8 @@
 .body{
-    height: 100px;
+    width: 100%;
 }
-
 .container{
+    margin: auto;
+    height: 100px;
     max-width: 1150px;
 }
