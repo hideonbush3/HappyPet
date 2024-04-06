@@ -89,12 +89,21 @@ export default function Writing(){
         const formData = new FormData();
         formData.append('title', title);
         formData.append('content', content);
-
+        
+        let imgsByteSize = 0;
         if(urlAndFile.size > 0){
             const files = Array.from(urlAndFile.values());
             files.forEach((file) => {
+                imgsByteSize += file.size;
                 formData.append('images', file);
             });
+            
+            const imgsKbyteSize = imgsByteSize / 1024;
+            if(imgsKbyteSize > 20){
+                alert(`첨부한 이미지 파일들의 총 용량이 20KB를 넘으면 안됩니다.\n현재 첨부한 이미지 파일의 총 크기: ${imgsKbyteSize.toString().substring(0, 5)}KB`);
+                return;
+            }
+            
             // Map => Json문자열 형변환
             const urlAndName = new Map();
             urlAndFile.forEach((value, key) => {

@@ -12,12 +12,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ImageDTO {
     private String name;
-    private Double kBytes;
+    private Long bytes;
 
     public static ImageDTO convertToDto(ImageEntity imageEntity){
         return ImageDTO.builder()
             .name(imageEntity.getName())
-            .kBytes(Math.ceil((double) imageEntity.getBytes() / 1024 * 100) / 100)
+            .bytes(imageEntity.getBytes())
             .build();
     }
 }

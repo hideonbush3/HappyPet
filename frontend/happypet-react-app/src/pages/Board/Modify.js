@@ -104,10 +104,12 @@ export default function Modify(){
         let imagesToDelete = [];
         const originImgs = post.imageList;
         let originImgNames = [];
+        let originBytesSize = 0;
 
         if(originImgs.length > 0){
             originImgs.forEach(image => {
                 originImgNames.push(image.name);
+                originBytesSize += image.bytes;
             })
         }
         
@@ -125,11 +127,28 @@ export default function Modify(){
         }
         formData.append('imagesToDelete', imagesToDelete);
 
+        if(imagesToDelete.length > 0){
+            imagesToDelete.forEach(imgName => {
+                originImgs.forEach(img => {
+                    if(img.name === imgName){
+                        originBytesSize -= img.bytes;
+                    }
+                })
+            })
+        }
+
+        let newImgsByteSize = 0;
         if(urlAndFile.size > 0){
             const files = Array.from(urlAndFile.values());
             files.forEach((file) => {
+                newImgsByteSize += file.size;
                 formData.append('images', file);
             });
+            const allImgsKbyteSize = (newImgsByteSize + originBytesSize) / 1024;
+            if(allImgsKbyteSize > 20){
+                alert(`첨부한 이미지 파일들의 총 용량이 20KB를 넘으면 안됩니다.\n현재 첨부한 이미지 파일의 총 크기: ${allImgsKbyteSize.toString().substring(0, 5)}KB`);
+                return;
+            }
 
             const urlAndName = new Map();
             urlAndFile.forEach((value, key) => {
