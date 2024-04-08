@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -33,6 +34,9 @@ import hideonbush3.springboot.happypet.utils.Utils;
 
 @Service
 public class PostServiceImpl implements PostService{
+    @Autowired
+    private S3FileService s3FileService;
+
     @Value("${image.dir}")
     private String imageDir;
 
@@ -59,42 +63,46 @@ public class PostServiceImpl implements PostService{
 
     @Override
     @Transactional
-    public ResponseDTO<PostDTO> insert(
-        String userId, String title, 
-        String content, List<MultipartFile> images, 
-        String urlAndName) {
+    public ResponseDTO<PostDTO> insert(String userId, String title, 
+                                    String content, List<MultipartFile> images, 
+                                    String urlAndName) {
         ResponseDTO<PostDTO> res = new ResponseDTO<>();
         try{
-            UserEntity user = userRepository.findById(userId).get();
-
-            LocalDateTime regdate = LocalDateTime.now();
-            String uuid = (LocalDate.now() + "" + LocalTime.now())
+            String dateTimeUuid = (LocalDate.now() + "" + LocalTime.now())
             .replace(".", "")
             .replace(":", "")
             .replace("-", "");
-            ArrayDeque<String> uuidArr = new ArrayDeque<>();
+
+            Map<String, String> uuidMapByImgName = new HashMap<>();
 
             if(urlAndName != null){
                 ObjectMapper objectMapper = new ObjectMapper();
-                Map<String, String> map = null;
+                Map<String, String> imgNameMapByUrl = null;
                 try{
-                    map = objectMapper.readValue(urlAndName, new TypeReference<Map<String, String>>(){});
+                    imgNameMapByUrl = objectMapper.readValue(urlAndName, new TypeReference<Map<String, String>>(){});
                 }catch(Exception e){
                     throw new RuntimeException("urlAndName 형변환 실패");
                 }
-    
-                for(Map.Entry<String, String> entry : map.entrySet()){
-                    String uuidString = uuid + Utils.createUuid(0, 4);
-                    
-                    String key = entry.getKey();
-                    String value = entry.getValue();
-                    String[] parts = value.split("\\.");
-                    String src = "http://localhost/images/" + parts[0] + " " + uuidString + "." + parts[1];
-                    content = content.replace(key, src);
+                
+                for(Map.Entry<String, String> entry : imgNameMapByUrl.entrySet()){
+                    String randomUuid = dateTimeUuid + Utils.createUuid(0, 4);
+                    String blobUrl = entry.getKey();
+                    String imgName = entry.getValue();
 
-                    uuidArr.add(uuidString);
+                    for(MultipartFile img : images){
+                        if(img.getOriginalFilename().equals(imgName)){
+                            String s3Url = s3FileService.saveFile(img, randomUuid);
+                            uuidMapByImgName.put(imgName, randomUuid);
+                            content = content.replace(blobUrl, s3Url);
+                            break;
+                        }
+                    }
                 }
             }
+
+            UserEntity user = userRepository.findById(userId).get();
+
+            LocalDateTime regdate = LocalDateTime.now();
 
             PostEntity postEntity = PostEntity.builder()
                     .title(title)
@@ -111,14 +119,13 @@ public class PostServiceImpl implements PostService{
 
             if(urlAndName != null){
                 for(MultipartFile image: images){
-                    String nameAndExt = image.getOriginalFilename();
-                    String[] parts = nameAndExt.split("\\.");
+                    String originalFileName = image.getOriginalFilename();
+                    String[] parts = originalFileName.split("\\.");
                     String name = parts[0];
                     String ext = parts[1];
-                    String nameToSave = name + " " + uuidArr.poll() + "." + ext;
+                    String uuid = uuidMapByImgName.get(originalFileName);
+                    String nameToSave = name + " " + uuid + "." + ext;
     
-                    image.transferTo(new File(imageDir + nameToSave));
-                    
                     ImageEntity imageEntity = ImageEntity.builder()
                         .name(nameToSave)
                         .bytes(image.getSize())
