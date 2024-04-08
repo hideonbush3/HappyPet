@@ -1,14 +1,12 @@
 package hideonbush3.springboot.happypet.service;
 
 import java.util.Optional;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -25,8 +23,8 @@ import hideonbush3.springboot.happypet.security.TokenProvider;
 
 @Service("ussrv")
 public class UserServiceImpl implements UserService{
-    @Value("${image.dir}")
-    private String imgDir;
+    @Autowired
+    private S3FileService s3FileService;
 
     @Autowired
     private UserRepository userRepository;
@@ -137,8 +135,7 @@ public class UserServiceImpl implements UserService{
                         int size = imgList.get(i).size();
                         for(int j = 0; j < size; j++){
                             ImageEntity img = imgList.get(i).get(j);
-                            File imgToDelete = new File(imgDir + img.getName());
-                            imgToDelete.delete();
+                            s3FileService.deleteImage(img.getName());
                         }
                     }
                 }

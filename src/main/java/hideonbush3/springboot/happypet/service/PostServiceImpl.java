@@ -1,6 +1,5 @@
 package hideonbush3.springboot.happypet.service;
 
-import java.io.File;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -10,11 +9,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.ArrayDeque;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -36,9 +33,6 @@ import hideonbush3.springboot.happypet.utils.Utils;
 public class PostServiceImpl implements PostService{
     @Autowired
     private S3FileService s3FileService;
-
-    @Value("${image.dir}")
-    private String imageDir;
 
     @Autowired
     private PostRepository postRepository;
@@ -155,32 +149,35 @@ public class PostServiceImpl implements PostService{
         String[] imagesToDelete) {
             ResponseDTO<PostDTO> res = new ResponseDTO<>();        
             try{
+                Map<String, String> uuidMapByImgName = new HashMap<>();
                 LocalDateTime regdate = LocalDateTime.now();
-                String uuid = (LocalDate.now() + "" + LocalTime.now())
+                String dateTimeUuid = (LocalDate.now() + "" + LocalTime.now())
                 .replace(".", "")
                 .replace(":", "")
                 .replace("-", "");
-                ArrayDeque<String> uuidArr = new ArrayDeque<>();
 
                 if(urlAndName != null){
                     ObjectMapper objectMapper = new ObjectMapper();
-                    Map<String, String> map = null;
+                    Map<String, String> imgNameMapByUrl = null;
                     try{
-                        map = objectMapper.readValue(urlAndName, new TypeReference<Map<String, String>>(){});
+                        imgNameMapByUrl = objectMapper.readValue(urlAndName, new TypeReference<Map<String, String>>(){});
                     }catch(Exception e){
                         throw new RuntimeException("urlAndName 형변환 실패");
                     }
         
-                    for(Map.Entry<String, String> entry : map.entrySet()){
-                        String uuidString = uuid + Utils.createUuid(0, 4);
-                        
-                        String key = entry.getKey();
-                        String value = entry.getValue();
-                        String[] parts = value.split("\\.");
-                        String src = "http://localhost/images/" + parts[0] + " " + uuidString + "." + parts[1];
-                        content = content.replace(key, src);
-    
-                        uuidArr.add(uuidString);
+                    for(Map.Entry<String, String> entry : imgNameMapByUrl.entrySet()){
+                        String randomUuid = dateTimeUuid + Utils.createUuid(0, 4);
+                        String blobUrl = entry.getKey();
+                        String imgName = entry.getValue();
+
+                        for(MultipartFile img : images){
+                            if(img.getOriginalFilename().equals(imgName)){
+                                String s3Url = s3FileService.saveFile(img, randomUuid);
+                                uuidMapByImgName.put(imgName, randomUuid);
+                                content = content.replace(blobUrl, s3Url);
+                                break;
+                            }
+                        }
                     }
                 }
 
@@ -194,13 +191,12 @@ public class PostServiceImpl implements PostService{
 
                 if(urlAndName != null){
                     for(MultipartFile image: images){
-                        String nameAndExt = image.getOriginalFilename();
-                        String[] parts = nameAndExt.split("\\.");
+                        String originalFileName = image.getOriginalFilename();
+                        String[] parts = originalFileName.split("\\.");
                         String name = parts[0];
                         String ext = parts[1];
-                        String nameToSave = name + " " + uuidArr.poll() + "." + ext;
-        
-                        image.transferTo(new File(imageDir + nameToSave));
+                        String uuid = uuidMapByImgName.get(originalFileName);
+                        String nameToSave = name + " " + uuid + "." + ext;
                         
                         ImageEntity imageEntity = ImageEntity.builder()
                             .name(nameToSave)
@@ -216,8 +212,7 @@ public class PostServiceImpl implements PostService{
                 if (imagesToDelete.length > 0) {
                     for(int i = 0; i < imagesToDelete.length; i++){
                         imageRepository.deleteByName(imagesToDelete[i]);
-                        File fileToDelete = new File(imageDir + imagesToDelete[i]);
-                        fileToDelete.delete();
+                        s3FileService.deleteImage(imagesToDelete[i]);
                     }
                     updatedPost = postRepository.findById(id).get();
                 }
@@ -251,8 +246,7 @@ public class PostServiceImpl implements PostService{
             List<ImageEntity> imgs = postToDelete.getImageList();
             if (!imgs.isEmpty()) {
                 for (ImageEntity img : imgs) {
-                    File fileToDelete = new File(imageDir + img.getName());
-                    fileToDelete.delete();
+                    s3FileService.deleteImage(img.getName());
                 }
             }
 

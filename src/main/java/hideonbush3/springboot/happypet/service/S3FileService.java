@@ -37,6 +37,7 @@ public class S3FileService {
     }
 
     public void deleteImage(String originalFilename)  {
-        amazonS3.deleteObject(bucket, originalFilename);
+        String key = directory + originalFilename;
+        amazonS3.deleteObject(bucket, key);
     }
 }
